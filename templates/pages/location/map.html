@@ -1,0 +1,40 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header pb-0">
+          <h6>User Locations Map</h6>
+          <p class="text-sm text-muted">Displays latest locations of all users with online/offline status</p>
+        </div>
+        <div class="card-body p-0">
+          <!-- Map container -->
+          <div id="user-locations-map" style="height: 600px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/user_locations_map.css' %}">
+{% endblock extra_head %}
+
+{% block extra_scripts %}
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<!-- Marker Cluster CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<!-- Your custom map JS -->
+<script src="{% static 'assets/js/user_locations_map.js' %}"></script>
+{% endblock extra_scripts %}

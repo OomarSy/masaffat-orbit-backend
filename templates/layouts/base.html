@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+  
+  {% include 'includes/head.html' %}
+  {% block extrastyle %}{% endblock extrastyle %}
+  {% block extrahead %}{% endblock extrahead %}
+</head>
+
+<body>
+  
+  {% block nav %}
+    {% include 'includes/nav.html' %}
+  {% endblock nav %}
+
+  {% block sidebar %}
+    {% include 'includes/sidebar.html' %}
+  {% endblock sidebar %}
+
+  <main class="content">
+    {% block header %}
+      {% include 'includes/navigation.html' %}
+    {% endblock header %}
+  
+    {% block content %}{% endblock content %}
+
+    {% block footer %}
+      {% include 'includes/footer.html' %}
+    {% endblock footer %}
+  </main>
+
+  {% include 'includes/scripts.html' %}
+  {% block extra_scripts %}{% endblock extra_scripts %}
+</body>

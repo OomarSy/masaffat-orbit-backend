@@ -1,0 +1,65 @@
+{% extends 'layouts/base-auth.html' %}
+{% load static %}
+
+{% block content %}
+<section class="vh-100 d-flex align-items-center justify-content-center bg-light">
+  <div class="container text-center">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-lg rounded-4 p-4 animate__animated animate__fadeInDown">
+          <div class="card-body">
+            <div class="mb-4">
+              <div class="icon icon-shape bg-warning text-white rounded-circle shadow mx-auto mb-3" style="width: 60px; height: 60px;">
+                <i class="fas fa-lock fa-2x d-flex justify-content-center align-items-center h-100"></i>
+              </div>
+            </div>
+            <h2 class="h4 text-danger fw-bold">Account Locked</h2>
+            <p class="text-muted my-3">
+              Your account has been temporarily locked due to multiple failed attempts. <br>
+              Please wait <span id="countdown">Loading...</span> before trying again.
+            </p>
+            <button id="homeBtn" class="btn btn-outline-primary mt-3" disabled>
+              Back to Homepage
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const countdownElement = document.getElementById('countdown');
+  const homeBtn = document.getElementById('homeBtn');
+
+  // Get lock_end_timestamp from server and calculate remaining time
+  const lockEnd = {{ lock_end_timestamp|default:0 }};
+  let now = Math.floor(Date.now() / 1000);
+  let timeLeft = lockEnd - now;
+
+  function updateCountdown() {
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      countdownElement.textContent = "0:00";
+      homeBtn.disabled = false;
+      homeBtn.innerText = "Back to Homepage";
+
+      // Clear session on server
+      fetch("{% url 'core:clear_lock_session' %}").then(() => {
+        homeBtn.onclick = () => {
+          window.location.href = "{% url 'dashboard' %}";
+        };
+      });
+      return;
+    }
+
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    countdownElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    timeLeft--;
+  }
+
+  updateCountdown();
+  const timer = setInterval(updateCountdown, 1000);
+</script>
+{% endblock content %}

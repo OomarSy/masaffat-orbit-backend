@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  {% include 'includes/head.html' %}
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      scroll-behavior: smooth;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #0f172a;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    /* Hero section */
+    .hero-section {
+      min-height: calc(100vh - 3rem - 3rem);
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+      background: #d4d3d3ff;
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Animations */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1s forwards;
+    }
+
+    .fade-in-up.delay-1 {
+      animation-delay: 0.3s;
+    }
+
+    .fade-in-up.delay-2 {
+      animation-delay: 0.6s;
+    }
+
+    .fade-in-up.delay-3 {
+      animation-delay: 0.9s;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-section h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-section h2 {
+      font-size: 1.5rem;
+      color: #111827; /* ← اللون الغامق */
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+
+    .hero-section .font-small {
+      color: #111827 !important; /* ← اللون الغامق */
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+
+    .hero-logo-wrapper {
+      display: block;
+      margin: 2rem auto 3rem;
+      padding: 1.5rem;
+      background-color: #111827;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      max-width: 300px;
+      transition: all 0.5s ease;
+    }
+
+    .hero-logo-wrapper:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    }
+
+    .hero-logo-wrapper img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .btn-dashboard {
+      background-color: #ffc107;
+      color: #111827;
+      font-weight: 600;
+      padding: 0.75rem 1.8rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 5px 15px rgba(255,193,7,0.4);
+      transition: all 0.4s ease;
+    }
+
+    .btn-dashboard:hover {
+      background-color: #ffdd57;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255,193,7,0.6);
+    }
+
+    /* Footer */
+    footer {
+      background-color: #111827;
+      color: #d1d5db;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    footer p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .social-buttons li a {
+      color: #d1d5db;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .social-buttons li a:hover {
+      color: #0d6efd;
+      transform: translateY(-3px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-section h1 { font-size: 2.5rem; }
+      .hero-section h2 { font-size: 1.2rem; }
+      .hero-logo { max-width: 180px; margin: 1.5rem auto 2rem; }
+      .btn-dashboard { padding: 0.6rem 1.5rem; font-size: 0.9rem; }
+      footer p { font-size: 0.8rem; }
+      .social-buttons li a { font-size: 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-section h1 { font-size: 2rem; }
+      .hero-section h2 { font-size: 1rem; }
+      .hero-logo { max-width: 150px; margin: 1rem auto 1.5rem; }
+      .btn-dashboard { padding: 0.5rem 1.2rem; font-size: 0.85rem; }
+      .social-buttons li a { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero-section">
+      <div class="container">
+        <h1 class="fade-in-up delay-1">Masaffat Orbit CMS</h1>
+        <h2 class="fade-in-up delay-2">Control Management System</h2>
+        <img src="{% static 'img/masafftat orbit.png' %}" alt="Masaffat Orbit Logo" class="hero-logo-wrapper fade-in-up delay-3">
+        <div class="d-flex justify-content-center mb-4 fade-in-up delay-3">
+          <a href="{% url 'dashboard:index' %}" class="btn-dashboard">Go to Dashboard</a>
+        </div>
+        <span class="font-small fade-in-up delay-3">&copy; Masaffat Orbit - Coded by Omar Almelhem.</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row mb-3">
+        <div class="col-md-8 mx-auto text-center">
+          <p>Masaffat Orbit is a comprehensive platform that connects users with streamlined management tools. Enjoy easy navigation, real-time updates, and a clean dashboard experience.</p>
+          <ul class="social-buttons list-inline mt-3">
+            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="fab fa-facebook"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="fab fa-github"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="fab fa-dribbble"></i></a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="border-gray-700">
+      <div class="row">
+        <div class="col text-center">
+          <p class="mb-0">&copy; Masaffat Orbit - Coded by Omar Almelhem.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  {% include 'includes/scripts.html' %}
+</body>
+
+</html>

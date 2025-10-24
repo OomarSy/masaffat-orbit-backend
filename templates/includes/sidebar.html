@@ -1,0 +1,41 @@
+{% load i18n static admin_volt %}
+
+<nav id="sidebarMenu" class="sidebar d-lg-block bg-dark text-white collapse" data-simplebar style="background-color: #111827;">
+    <ul class="nav flex-column pt-3 pt-md-0">
+
+        <!-- Brand -->
+        <li class="nav-item mb-3 text-center">
+            <a href="{% url 'index' %}" class="nav-link d-flex flex-column align-items-center">
+                <span class="sidebar-icon mb-2">
+                    <img src="{% static 'assets/img/brand/masafftat-orbit.png' %}" height="50" width="120" alt="Masaffat Orbit Logo">
+                </span>
+                <span class="sidebar-text fw-bold fs-6">Control Management</span>
+            </a>
+        </li>
+
+        <!-- Dashboard -->
+        <li class="nav-item {% if 'dashboard' in segment %}active{% endif %}">
+            <a href="{% url 'dashboard:index' %}" class="nav-link d-flex align-items-center px-3">
+                <i class="fas fa-chart-line me-2"></i>
+                <span>{% trans "Dashboard" %}</span>
+            </a>
+        </li>
+
+        <!-- Users -->
+        <li class="nav-item {% if 'user' in segment %}active{% endif %}">
+            <a href="{% url 'core:user_list' %}" class="nav-link d-flex align-items-center px-3">
+                <i class="fas fa-users me-2"></i>
+                <span>{% trans "Users" %}</span>
+            </a>
+        </li>
+
+        <!-- Locations -->
+        <li class="nav-item {% if 'location' in segment %}active{% endif %}">
+            <a href="{% url 'location:cms-user-locations-page' %}" class="nav-link d-flex align-items-center px-3">
+                <i class="fas fa-map-marker-alt me-2"></i>
+                <span>{% trans "Locations" %}</span>
+            </a>
+        </li>
+
+    </ul>
+</nav>

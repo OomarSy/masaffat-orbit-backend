@@ -1,0 +1,59 @@
+name:
+  masaffat-orbit
+services:
+  masaffat-orbit:
+    build:
+      context: ..
+      target: builder
+    ports:
+      - 8000:8000
+    volumes:
+      - ..:/code:cached
+      - media_volume:/code/media
+    env_file:
+      - ../.env
+    environment:
+      DEBUG: "TRUE"
+      PYTHONUNBUFFERED: 1
+      TZ: Asia/Damascus
+    depends_on:
+      - masaffat-orbit-db
+      - masaffat-orbit-redis
+    command: sleep infinity
+
+  masaffat-orbit-db:
+    image: postgres:17.0
+    env_file:
+      - ../.env
+    environment:
+      TZ: Asia/Damascus
+    volumes:
+       - local_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $DB_USERNAME -d $DB_NAME"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  masaffat-orbit-db-admin:
+    image: dpage/pgadmin4:8.12.0
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "8888:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  masaffat-orbit-redis:
+    image: redis:7.4.2
+    environment:
+      TZ: Asia/Damascus
+    volumes:
+      - cache:/data
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+  media_volume:
+  cache:

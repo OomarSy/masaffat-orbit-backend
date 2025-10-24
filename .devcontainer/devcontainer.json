@@ -1,0 +1,20 @@
+{
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "masaffat-orbit",
+  "workspaceFolder": "/code",
+  "settings": {
+    "python.defaultInterpreterPath": "/usr/local/bin/python"
+  },
+  "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-python.python",
+          "VisualStudioExptTeam.vscodeintellicode",
+          "batisteo.vscode-django",
+          "kevinrose.vsc-python-indent",
+          "njpwerner.autodocstring",
+          "wholroyd.jinja"
+      ]
+      }
+    }
+}

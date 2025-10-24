@@ -1,0 +1,97 @@
+variables:  
+  SERVER_IP: $VPSSMART_SERVER_INTERNAL_IP
+  SERVER_USER: $VPSSMART_SERVER_USER
+  PROXY: $VPSSMART_PROXY
+
+  TAG_LATEST: $CI_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME:latest
+  TAG_COMMIT: $CI_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+
+stages:
+  - build
+  - test
+  - deploy
+
+.export_porxy: &export_porxy
+  - export http_proxy="$SERVER_PROXY"
+  - export https_proxy="$SERVER_PROXY"
+
+.export_variables: &export_variables
+  - export IMAGE_APP_TAG=$TAG_COMMIT
+  - export HOST=$HOST
+  - export ENVIRONMENT=$CI_ENVIRONMENT_NAME
+  - export DB_ENV=$GIT_DB_ENV
+  - export COMPOSE_PROJECT_NAME=$APP_NAME
+
+.add_ssh_key: &add_ssh_key
+  - eval $(ssh-agent -s)
+  - echo "$SERVER_KEY" | tr -d '\r' | ssh-add - > /dev/null
+
+.login_to_registry: &login_to_registry
+  - echo "$CI_REGISTRY_TOKEN" | docker login $CI_REGISTRY_URL -u $CI_REGISTRY_AGENT --password-stdin
+
+.login_to_dockerhub: &login_to_dockerhub
+  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+
+.deploy_to_server: &deploy_to_server
+  - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u $CI_REGISTRY_AGENT -p $CI_REGISTRY_TOKEN $CI_REGISTRY_URL"
+  - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin"
+  - docker-compose -H "ssh://$SERVER_USER@$SERVER_IP" down --remove-orphans
+  - docker-compose -H "ssh://$SERVER_USER@$SERVER_IP" pull
+  - docker-compose -H "ssh://$SERVER_USER@$SERVER_IP" up -d
+
+build:
+  stage: build
+  tags:
+    - docker
+  before_script:
+    - *export_porxy
+    - *login_to_dockerhub
+  script:
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
+    - *login_to_registry
+    
+    - docker push $TAG_COMMIT
+    - docker push $TAG_LATEST
+  only:
+    - testing
+    - production
+
+deploy-to-testing:
+  stage: deploy
+  tags: 
+    - docker
+  before_script:
+    - export http_proxy="$PROXY"
+    - export https_proxy="$PROXY"
+  script:
+    - export DEBUG="TRUE"
+    - *export_variables
+
+    - *login_to_registry
+    - *login_to_dockerhub
+
+    - *add_ssh_key
+    - *deploy_to_server
+
+  only:
+    - testing
+  environment: Testing
+
+deploy-to-production:
+  stage: deploy
+  tags: 
+    - docker
+  before_script:
+    - export http_proxy="$PROXY"
+    - export https_proxy="$PROXY"
+  script:
+    - *export_variables
+
+    - *login_to_registry
+    - *login_to_dockerhub
+    
+    - *add_ssh_key
+    - *deploy_to_server
+  only:
+    - production
+  environment: Production
