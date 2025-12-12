@@ -138,7 +138,7 @@ elif DEBUG:
     DB_ENGINE   = os.getenv('DB_ENGINE', "psqlextra.backend")
     DB_USERNAME = os.getenv('DB_USERNAME', "admin")
     DB_PASS     = os.getenv('DB_PASS', "password")
-    DB_HOST     = os.getenv('DB_HOST', "masaffat-orbit-db")
+    DB_HOST     = os.getenv('DB_HOST', "orbit-db")
     DB_PORT     = os.getenv('DB_PORT', "5432")
     DB_NAME     = os.getenv('DB_NAME', "postgres")
     
@@ -162,7 +162,7 @@ else:
 
 ### Caches (Redis) ###
 
-REDIS_URL = os.getenv('REDIS_URL', 'redis://masaffat-orbit-redis:6379/1')
+REDIS_URL = os.getenv('REDIS_URL', 'redis://orbit-redis:6379/1')
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',

@@ -1,6 +1,6 @@
 {
   "dockerComposeFile": "./docker-compose.yml",
-  "service": "masaffat-orbit",
+  "service": "orbit",
   "workspaceFolder": "/code",
   "settings": {
     "python.defaultInterpreterPath": "/usr/local/bin/python"
