@@ -1,5 +1,5 @@
 services:
-  masaffat-orbit:
+  orbit:
     image: $IMAGE_APP_TAG
     restart: unless-stopped
     environment:
@@ -34,9 +34,9 @@ services:
       - traefik.http.routers.masaffat-orbit-$ENVIRONMENT.entrypoints=https
       - traefik.http.services.masaffat-orbit-$ENVIRONMENT.loadbalancer.server.port=8080
 
-  masaffat-orbit-db:
+  orbit-db:
     image: postgres:17.0
-    container_name: masaffat-orbit-db-${DB_ENV}
+    container_name: orbit-db-${DB_ENV}
     restart: unless-stopped
     environment:
       POSTGRES_DB: $DB_NAME
@@ -47,7 +47,7 @@ services:
     networks:
       - default
 
-  masaffat-orbit-redis:
+  orbit-redis:
     image: redis
     restart: unless-stopped
     networks:

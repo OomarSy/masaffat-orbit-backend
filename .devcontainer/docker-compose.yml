@@ -1,7 +1,7 @@
 name:
-  masaffat-orbit
+  orbit
 services:
-  masaffat-orbit:
+  orbit:
     build:
       context: ..
       target: builder
@@ -17,11 +17,11 @@ services:
       PYTHONUNBUFFERED: 1
       TZ: Asia/Damascus
     depends_on:
-      - masaffat-orbit-db
-      - masaffat-orbit-redis
+      - orbit-db
+      - orbit-redis
     command: sleep infinity
 
-  masaffat-orbit-db:
+  orbit-db:
     image: postgres:17.0
     env_file:
       - ../.env
@@ -35,7 +35,7 @@ services:
       timeout: 5s
       retries: 5
 
-  masaffat-orbit-db-admin:
+  orbit-db-admin:
     image: dpage/pgadmin4:8.12.0
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
@@ -45,7 +45,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
-  masaffat-orbit-redis:
+  orbit-redis:
     image: redis:7.4.2
     environment:
       TZ: Asia/Damascus
