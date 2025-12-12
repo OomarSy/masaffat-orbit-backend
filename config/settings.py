@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.dashboard',
     'apps.location',
+    'apps.attendance',
 
     # UI & Forms Styling
     'crispy_forms',
@@ -338,3 +339,9 @@ MAX_ATTEMPTS = int(os.getenv('MAX_ATTEMPTS', 5))
 BLOCK_DURATION = int(os.getenv('BLOCK_DURATION', 30))
 RETRY_DURATION = int(os.getenv('RETRY_DURATION', 20))
 OTP_EXPIRATION = int(os.getenv('OTP_EXPIRATION', 20))
+
+# Attendance App Settings
+COMPANY_LATITUDE = 33.513807
+COMPANY_LONGITUDE = 36.276527
+COMPANY_RADIUS_METERS = 150
+WEEKEND_DAYS = [4, 5]  # Friday=4, Saturday=5 (Django: Monday=0)
