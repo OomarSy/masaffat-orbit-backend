@@ -1,8 +1,10 @@
 import math
 from django.conf import settings
 from django.utils import timezone
+from decimal import Decimal
+from datetime import datetime
 from apps.attendance.models import Attendance
-
+from apps.attendance.models import Overtime
 
 class AttendanceService:
 
@@ -114,3 +116,48 @@ class AttendanceService:
             "status": "success",
             "message": "تم تسجيل الخروج بنجاح."
         }
+
+
+class OvertimeService:
+
+    @staticmethod
+    def create_overtime(user, entries):
+        """
+        entries: list of dicts {'start_date', 'start_time', 'end_date', 'end_time'}
+        """
+        created = []
+        errors = []
+
+        for idx, entry in enumerate(entries):
+            start_dt = datetime.combine(entry['start_date'], entry['start_time'])
+            end_dt = datetime.combine(entry['end_date'], entry['end_time'])
+
+            # Validation: no overlap
+            overlapping = Overtime.objects.filter(
+                user=user,
+                start_datetime__lt=end_dt,
+                end_datetime__gt=start_dt
+            ).exists()
+
+            if overlapping:
+                errors.append({"index": idx, "message": "توجد فترة متداخلة مع دوام إضافي آخر."})
+                continue
+
+            # حساب عدد الساعات
+            delta = end_dt - start_dt
+            hours = round(delta.total_seconds() / 3600, 2)
+
+            overtime = Overtime.objects.create(
+                user=user,
+                start_datetime=start_dt,
+                end_datetime=end_dt,
+                hours=Decimal(hours)
+            )
+            created.append({
+                "id": overtime.id,
+                "start_datetime": start_dt.isoformat(),
+                "end_datetime": end_dt.isoformat(),
+                "hours": hours
+            })
+
+        return created, errors

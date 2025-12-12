@@ -2,8 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
+from apps.attendance.serializers import OvertimeEntrySerializer
+from apps.attendance.service.attendance import OvertimeService
 from apps.attendance.serializers import AttendanceSerializer
-from services.attendance import AttendanceService
+from apps.attendance.service.attendance import AttendanceService
 from base.utils import api_response
 
 class CheckinAPI_V1(APIView):
@@ -110,4 +112,72 @@ class CheckoutAPI_V1(APIView):
             errorno=0,
             message=result["message"],
             status_code=status.HTTP_200_OK,
+        )
+
+
+class OvertimeAPI_V1(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        entries = request.data.get("entries", [])
+        if not isinstance(entries, list) or not entries:
+            return api_response(
+                errorno=1,
+                message="يرجى تمرير قائمة صحيحة من الإدخالات.",
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = OvertimeEntrySerializer(data=entries, many=True)
+        if not serializer.is_valid():
+            return api_response(
+                errorno=2,
+                message="خطأ في التحقق من البيانات.",
+                data=serializer.errors,
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        created, errors = OvertimeService.create_overtime(request.user, serializer.validated_data)
+
+        return api_response(
+            errorno=0,
+            message="تمت معالجة الدوام الإضافي.",
+            data={
+                "created": created,
+                "errors": errors
+            },
+            status_code=status.HTTP_200_OK
+        )
+
+
+class OvertimeAPI_V1(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        entries = request.data.get("entries", [])
+        if not isinstance(entries, list) or not entries:
+            return api_response(
+                errorno=1,
+                message="يرجى تمرير قائمة صحيحة من الإدخالات.",
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = OvertimeEntrySerializer(data=entries, many=True)
+        if not serializer.is_valid():
+            return api_response(
+                errorno=2,
+                message="خطأ في التحقق من البيانات.",
+                data=serializer.errors,
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        created, errors = OvertimeService.create_overtime(request.user, serializer.validated_data)
+
+        return api_response(
+            errorno=0,
+            message="تمت معالجة الدوام الإضافي.",
+            data={
+                "created": created,
+                "errors": errors
+            },
+            status_code=status.HTTP_200_OK
         )
