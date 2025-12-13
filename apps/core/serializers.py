@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
 
 from apps.core.validators import validate_password_strength

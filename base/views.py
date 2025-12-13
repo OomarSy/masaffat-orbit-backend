@@ -1,53 +1,86 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from tablib import Dataset
 from django.views.generic import DeleteView
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
 from django_tables2 import SingleTableMixin
 from django_filters.views import FilterView
-from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.utils import timezone
+
+from datetime import datetime
+from tablib import Dataset
 
 
 class BaseCRUDView(LoginRequiredMixin):
-    """
-    Base class for CRUD CBVs
-    """
     model = None
     form_class = None
     template_name = 'generic/form.html'
     success_url = None
-    view_name = None  # For template context
+    view_name = None
+    segment = None
 
+    details = False
+    edit = False
+    create = False
+    visible_fields = None
+
+    def form_valid(self, form):
+        """
+        Set user_created automatically for new records.
+        """
+        if not form.instance.pk:
+            form.instance._current_user = self.request.user
+        return super().form_valid(form)
+    
     def get_success_url(self):
         return self.success_url or reverse_lazy(
             f'{self.model._meta.app_label}:{self.model._meta.model_name}_list'
         )
 
-    def get_breadcrumbs(self):
-        """
-        Default breadcrumb: Home > Model List > Current Page
-        """
-        breadcrumbs = [{'name': 'Home', 'url': reverse_lazy('index')}]
+    def get_form_kwargs(self):
+        """Return kwargs to instantiate form"""
+        kwargs = super().get_form_kwargs() if hasattr(super(), "get_form_kwargs") else {}
 
-        # List page
-        list_url = reverse_lazy(f'{self.model._meta.app_label}:{self.model._meta.model_name}_list')
-        list_name = self.model._meta.verbose_name_plural.title()
-        breadcrumbs.append({'name': list_name, 'url': list_url})
+        kwargs['details'] = getattr(self, 'details', False)
+        kwargs['edit'] = getattr(self, 'edit', False)
+        kwargs['create'] = getattr(self, 'create', False)
+        kwargs['visible_fields'] = getattr(self, 'visible_fields', None)
+        kwargs['cancel_url'] = self.success_url
 
-        # Current view name (Create/Update/Detail/Delete)
-        if self.view_name:
-            breadcrumbs.append({'name': self.view_name, 'url': ''})
-
-        return breadcrumbs
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        if 'form' not in context and self.form_class:
+            context['form'] = self.get_form() if hasattr(self, 'get_form') else self.form_class(
+                instance=getattr(self, 'object', None),
+                **self.get_form_kwargs()
+            )
+
+        context['details'] = getattr(self, 'details', False)
+        context['edit'] = getattr(self, 'edit', False)
+        context['create'] = getattr(self, 'create', False)
+
+        context['segment'] = self.segment or self.model._meta.model_name
         context['view_name'] = self.view_name
         context['breadcrumbs'] = self.get_breadcrumbs()
+
         return context
 
+    def get_breadcrumbs(self):
+        breadcrumbs = [{'name': 'Home', 'url': reverse_lazy('index')}]
+        list_url = reverse_lazy(f'{self.model._meta.app_label}:{self.model._meta.model_name}_list')
+        list_name = self.model._meta.verbose_name_plural.title()
+        breadcrumbs.append({'name': list_name, 'url': list_url})
+        if self.view_name:
+            breadcrumbs.append({'name': self.view_name, 'url': ''})
+        return breadcrumbs
+
+    def form_invalid(self, form):
+        """Return form with errors"""
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
+    
 
 class BaseListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     """
@@ -60,7 +93,8 @@ class BaseListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     view_name = None
     add_url_name = None
     export_fields = None  # List of fields to export, default None = all fields
-
+    segment = None
+    
     def get_queryset(self):
         qs = super().get_queryset()
         qs = qs.order_by('id')  # Default ordering by 'id'
@@ -76,6 +110,7 @@ class BaseListView(LoginRequiredMixin, SingleTableMixin, FilterView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['segment'] = self.segment or self.request.resolver_match.app_name
 
         # Add export URL
         query_params = self.request.GET.copy()
@@ -99,29 +134,44 @@ class BaseListView(LoginRequiredMixin, SingleTableMixin, FilterView):
 
         return context
 
+    
     def export_data(self):
-        """
-        Export only fields defined in the table_class (Meta.fields).
-        """
         dataset = Dataset()
         qs = self.get_queryset()
 
-        if self.table_class and hasattr(self.table_class.Meta, "fields"):
-            fields = list(self.table_class.Meta.fields)
+        if self.export_fields:
+            fields = self.export_fields
+
+        elif self.table_class and hasattr(self.table_class.Meta, "fields"):
+            fields = self.table_class.Meta.fields
+
         else:
-            fields = self.export_fields or [f.name for f in self.model._meta.fields]
+            fields = [f.name for f in self.model._meta.fields]
 
         dataset.headers = fields
 
         for obj in qs:
-            row = [getattr(obj, f) for f in fields]
+            row = []
+            for field_name in fields:
+                value = getattr(obj, field_name)
+
+                if isinstance(value, datetime):
+                    value = timezone.localtime(value)
+                    value = value.replace(microsecond=0, tzinfo=None)
+
+                row.append(value)
+
             dataset.append(row)
 
-        response = HttpResponse(dataset.export("csv"), content_type="text/csv")
-        response["Content-Disposition"] = (
+        response = HttpResponse(
+            dataset.export('csv').encode('utf-8-sig'),
+            content_type='text/csv'
+        )
+        response['Content-Disposition'] = (
             f'attachment; filename="{self.model._meta.model_name}_export.csv"'
         )
         return response
+
 
     def get(self, request, *args, **kwargs):
         if '_export' in request.GET:
@@ -137,6 +187,14 @@ class BaseDeleteView(LoginRequiredMixin, DeleteView):
     view_name = None
     hide_fields = ['id']  # Default: hide the 'id' field
 
+    def delete(self, request, *args, **kwargs):
+        """
+        Override to perform soft delete instead of actual delete.
+        """
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
+    
     def get_success_url(self):
         return reverse_lazy(f'{self.model._meta.app_label}:{self.model._meta.model_name}_list')
 
@@ -166,4 +224,7 @@ class BaseDeleteView(LoginRequiredMixin, DeleteView):
         ]
         context['fields'] = self.get_fields()
         context['back_url'] = self.get_back_url()
+        
+        context['segment'] = getattr(self, 'segment', self.model._meta.app_label)
+        
         return context

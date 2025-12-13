@@ -1,13 +1,17 @@
 from django.urls import path
 
-from apps.location.views import CMSUserLocationsAPI, UpdateLocationAPI_V1, UserLocationsPageView
+from apps.location import views
 
 
 urlpatterns = [
     
-    path('api/v1/update/location/', UpdateLocationAPI_V1.as_view(), name='update_location_api'),
-    path('cms/user-locations/', CMSUserLocationsAPI.as_view(), name='cms-user-locations'),
+    # mobile api paths
+    path('api/v1/update/location/', views.UpdateLocationAPI_V1.as_view(), name='update_location_api'),
     
-    path('cms/map/', UserLocationsPageView.as_view(), name='cms-user-locations-page'),
+    # cms api paths
+    path('cms/user-locations/', views.CMSUserLocationsAPI_V1.as_view(), name='cms-user-locations'),
+    
+    # cms page views
+    path('cms/map/', views.UserLocationsPageView.as_view(), name='cms-user-locations-page'),
 
 ]

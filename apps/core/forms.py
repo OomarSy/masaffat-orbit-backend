@@ -1,13 +1,10 @@
-import re
-
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
 from django.utils.translation import gettext_lazy as _
 from django import forms
-from django.contrib.auth.forms import UserChangeForm
-from django.utils.translation import gettext_lazy as _
-from apps.core.models import User
+
 from base.forms import BaseModelForm
-from django import forms
+from .models import User
+
 
 
 class LoginForm(AuthenticationForm):
@@ -19,21 +16,14 @@ class LoginForm(AuthenticationForm):
   )
 
 
-class UserForm(BaseModelForm, UserChangeForm):
+class UserForm(BaseModelForm):
+    SUBMIT_TEXT = _('Save User')
+
     password = forms.CharField(
         required=False,
-        widget=forms.PasswordInput(attrs={'placeholder': _('Enter new password (optional)')})
+        widget=forms.PasswordInput(attrs={'placeholder': _('Enter new password')})
     )
-
-    class Meta:
+    
+    class Meta(BaseModelForm.Meta):
         model = User
         fields = ['username', 'is_active', 'is_staff', 'is_superuser']
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        password = self.cleaned_data.get("password")
-        if password:
-            user.set_password(password)
-        if commit:
-            user.save()
-        return user

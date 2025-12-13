@@ -1,8 +1,11 @@
+import re
+
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
-import re
+
 
 User = get_user_model()
 

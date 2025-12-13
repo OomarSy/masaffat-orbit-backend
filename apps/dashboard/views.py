@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils import timezone
+
 from datetime import timedelta
-from apps.core.models import User
+
 from apps.location.models import UserLocation
+from apps.core.models import User
 
 @login_required
 def dashboard(request):

@@ -37,5 +37,21 @@
             </a>
         </li>
 
+        <!-- Attendance -->
+        <li class="nav-item {% if 'attendance' in segment %}active{% endif %}">
+            <a href="{% url 'attendance:attendance_list' %}" class="nav-link d-flex align-items-center px-3">
+                <i class="fas fa-calendar-check me-2"></i>
+                <span>{% trans "Attendance" %}</span>
+            </a>
+        </li>
+
+        <!-- Overtime -->
+        <li class="nav-item {% if 'overtime' in segment %}active{% endif %}">
+            <a href="{% url 'attendance:overtime_list' %}" class="nav-link d-flex align-items-center px-3">
+                <i class="fas fa-clock me-2"></i>
+                <span>{% trans "Overtime" %}</span>
+            </a>
+        </li>
+
     </ul>
 </nav>

@@ -1,12 +1,16 @@
-from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from django.db import models
 
 from django.contrib.auth import get_user_model
 
+from base.mixins import SoftDeleteUniqueMixin
+from base.models import BaseModel
+
 User = get_user_model()
 
-class UserLocation(models.Model):
+
+class UserLocation(SoftDeleteUniqueMixin, BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="location")
     latitude = models.DecimalField(max_digits=30, decimal_places=15, null=True, blank=True)
     longitude = models.DecimalField(max_digits=30, decimal_places=15, null=True, blank=True)
