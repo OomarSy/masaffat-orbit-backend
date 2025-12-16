@@ -128,16 +128,30 @@ class OvertimeService:
     @staticmethod
     def create_overtime(user, entries):
         """
-        entries: list of dicts {'start_date', 'start_time', 'end_date', 'end_time'}
+        entries: list of dicts {'start_date', 'start_time', 'end_date', 'end_time', 'note'}
         """
         created = []
         errors = []
 
         now = timezone.now()
-        
+
         for idx, entry in enumerate(entries):
             start_dt = datetime.combine(entry['start_date'], entry['start_time'])
             end_dt = datetime.combine(entry['end_date'], entry['end_time'])
+
+            # make aware
+            if timezone.is_naive(start_dt):
+                start_dt = timezone.make_aware(start_dt)
+            if timezone.is_naive(end_dt):
+                end_dt = timezone.make_aware(end_dt)
+
+            # basic validation
+            if start_dt >= end_dt:
+                errors.append({
+                    "index": idx,
+                    "message": "وقت البدء يجب أن يكون قبل وقت الانتهاء."
+                })
+                continue
 
             if end_dt > now:
                 errors.append({
@@ -145,8 +159,8 @@ class OvertimeService:
                     "message": "لا يمكن تسجيل دوام إضافي في المستقبل."
                 })
                 continue
-            
-            # Validation: no overlap
+
+            # overlap check
             overlapping = Overtime.objects.filter(
                 user=user,
                 start_datetime__lt=end_dt,
@@ -160,25 +174,24 @@ class OvertimeService:
                 })
                 continue
 
-            # حساب عدد الساعات
+            # calculate hours
             delta = end_dt - start_dt
-            hours = round(delta.total_seconds() / 3600, 2)
+            hours = Decimal(round(delta.total_seconds() / 3600, 2))
 
-            note = entry.get("note", "")
-            
             overtime = Overtime.objects.create(
                 user=user,
                 start_datetime=start_dt,
                 end_datetime=end_dt,
-                hours=Decimal(hours),
-                note=note
+                hours=hours,
+                note=entry.get("note", "")
             )
+
             created.append({
                 "id": overtime.id,
-                "start_datetime": start_dt.isoformat(),
-                "end_datetime": end_dt.isoformat(),
-                "hours": hours,
-                "note": note
+                "start_datetime": overtime.start_datetime.isoformat(),
+                "end_datetime": overtime.end_datetime.isoformat(),
+                "hours": float(hours),
+                "note": overtime.note
             })
 
         return created, errors

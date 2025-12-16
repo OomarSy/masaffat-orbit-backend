@@ -18,12 +18,20 @@ class OvertimeEntrySerializer(serializers.Serializer):
         start_dt = datetime.combine(data['start_date'], data['start_time'])
         end_dt = datetime.combine(data['end_date'], data['end_time'])
 
+        start_dt = timezone.make_aware(start_dt)
+        end_dt = timezone.make_aware(end_dt)
+
         if start_dt >= end_dt:
-            raise serializers.ValidationError("تاريخ ووقت البدء يجب أن يكون قبل تاريخ ووقت الانتهاء.")
+            raise serializers.ValidationError(
+                "تاريخ ووقت البدء يجب أن يكون قبل تاريخ ووقت الانتهاء."
+            )
 
         if end_dt > timezone.now():
             raise serializers.ValidationError(
                 "لا يمكن إدخال دوام إضافي في المستقبل."
             )
-        
+
+        data['start_datetime'] = start_dt
+        data['end_datetime'] = end_dt
+
         return data
