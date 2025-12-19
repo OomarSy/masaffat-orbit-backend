@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import status
-
+from rest_framework.exceptions import ValidationError
 from django.views.generic import DetailView, CreateView, UpdateView
 from django.utils.translation import gettext_lazy as _
 from django.db import IntegrityError, transaction
@@ -207,17 +207,41 @@ class TokenRefreshAPI_V1(TokenRefreshView):
                 data={"code": "token_not_valid"},
                 status_code=status.HTTP_401_UNAUTHORIZED
             )
-        return super().handle_exception(exc)
+
+        if isinstance(exc, ValidationError):
+            field_errors = {}
+
+            for field, msgs in exc.detail.items():
+                field_errors[field] = [str(msg) for msg in msgs]
+
+            return api_response(
+                errorno=3,
+                message="بيانات الطلب غير صالحة.",
+                data=field_errors,
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+
+        return api_response(
+            errorno=99,
+            message="خطأ غير متوقع، يرجى المحاولة لاحقًا.",
+            data=None,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
     def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        if response.status_code == 200:
+        try:
+            response = super().post(request, *args, **kwargs)
+
             return api_response(
                 errorno=0,
                 message="تم تحديث التوكن بنجاح.",
-                data=response.data
+                data=response.data,
+                status_code=status.HTTP_200_OK
             )
-        return response
+
+        except Exception as exc:
+            return self.handle_exception(exc)
 
 
 #page views
