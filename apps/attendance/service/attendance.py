@@ -8,6 +8,7 @@ from decimal import Decimal
 
 from apps.attendance.models import Attendance
 from apps.attendance.models import Overtime
+from apps.attendance.utils import ensure_aware
 
 
 
@@ -126,26 +127,20 @@ class AttendanceService:
 class OvertimeService:
 
     @staticmethod
-    def create_overtime(user, entries):
-        """
-        entries: list of dicts {'start_date', 'start_time', 'end_date', 'end_time', 'note'}
-        """
-        created = []
+    def validate_entries(user, entries):
         errors = []
-
         now = timezone.now()
 
+        validated_ranges = []  # (index, start_dt, end_dt)
+
         for idx, entry in enumerate(entries):
-            start_dt = datetime.combine(entry['start_date'], entry['start_time'])
-            end_dt = datetime.combine(entry['end_date'], entry['end_time'])
+            start_dt = ensure_aware(
+                datetime.combine(entry['start_date'], entry['start_time'])
+            )
+            end_dt = ensure_aware(
+                datetime.combine(entry['end_date'], entry['end_time'])
+            )
 
-            # make aware
-            if timezone.is_naive(start_dt):
-                start_dt = timezone.make_aware(start_dt)
-            if timezone.is_naive(end_dt):
-                end_dt = timezone.make_aware(end_dt)
-
-            # basic validation
             if start_dt >= end_dt:
                 errors.append({
                     "index": idx,
@@ -160,21 +155,47 @@ class OvertimeService:
                 })
                 continue
 
-            # overlap check
-            overlapping = Overtime.objects.filter(
+            if Overtime.objects.filter(
                 user=user,
                 start_datetime__lt=end_dt,
                 end_datetime__gt=start_dt
-            ).exists()
-
-            if overlapping:
+            ).exists():
                 errors.append({
                     "index": idx,
-                    "message": "توجد فترة متداخلة مع دوام إضافي آخر."
+                    "message": "توجد فترة متداخلة مع دوام إضافي مسجل مسبقًا."
                 })
                 continue
 
-            # calculate hours
+            conflict = False
+            for prev_idx, prev_start, prev_end in validated_ranges:
+                if start_dt < prev_end and end_dt > prev_start:
+                    errors.append({
+                        "index": idx,
+                        "message": f"توجد فترة متداخلة مع الإدخال رقم {prev_idx + 1} في نفس الطلب."
+                    })
+                    conflict = True
+                    break
+
+            if conflict:
+                continue
+
+            validated_ranges.append((idx, start_dt, end_dt))
+
+        return errors
+
+    
+    @staticmethod
+    def create_overtime(user, entries):
+        created = []
+
+        for entry in entries:
+            start_dt = ensure_aware(
+                datetime.combine(entry['start_date'], entry['start_time'])
+            )
+            end_dt = ensure_aware(
+                datetime.combine(entry['end_date'], entry['end_time'])
+            )
+
             delta = end_dt - start_dt
             hours = Decimal(round(delta.total_seconds() / 3600, 2))
 
@@ -194,4 +215,4 @@ class OvertimeService:
                 "note": overtime.note
             })
 
-        return created, errors
+        return created

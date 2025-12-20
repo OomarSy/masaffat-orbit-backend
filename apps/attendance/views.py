@@ -243,6 +243,7 @@ class OvertimeAPI_V1(APIView):
 
     def post(self, request):
         entries = request.data.get("entries", [])
+
         if not isinstance(entries, list) or not entries:
             return api_response(
                 errorno=1,
@@ -259,14 +260,27 @@ class OvertimeAPI_V1(APIView):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-        created, errors = OvertimeService.create_overtime(request.user, serializer.validated_data)
+        errors = OvertimeService.validate_entries(
+            request.user,
+            serializer.validated_data
+        )
+
+        if errors:
+            return api_response(
+                errorno=3,
+                message="فشل تسجيل الدوام الإضافي بسبب أخطاء في الإدخال.",
+                data={"errors": errors},
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        created = OvertimeService.create_overtime(
+            request.user,
+            serializer.validated_data
+        )
 
         return api_response(
             errorno=0,
-            message="تمت معالجة الدوام الإضافي.",
-            data={
-                "created": created,
-                "errors": errors
-            },
-            status_code=status.HTTP_200_OK
+            message="تم تسجيل الدوام الإضافي بنجاح.",
+            data={"created": created},
+            status_code=status.HTTP_201_CREATED
         )
