@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     
     # Developer Tools
@@ -129,35 +130,24 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-if DEBUG and DATABASE_URL:
-    db_config = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+if DATABASE_URL:
+    db_config = dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600,
+    )
     db_config['ENGINE'] = 'psqlextra.backend'
     DATABASES = {
         'default': db_config,
     }
-elif DEBUG:
-    DB_ENGINE   = os.getenv('DB_ENGINE', "psqlextra.backend")
-    DB_USERNAME = os.getenv('DB_USERNAME', "admin")
-    DB_PASS     = os.getenv('DB_PASS', "password")
-    DB_HOST     = os.getenv('DB_HOST', "orbit-db")
-    DB_PORT     = os.getenv('DB_PORT', "5432")
-    DB_NAME     = os.getenv('DB_NAME', "postgres")
-    
-    DATABASES = {
-        'default': {
-            'ENGINE'  : DB_ENGINE,
-            'NAME'    : DB_NAME,
-            'USER'    : DB_USERNAME,
-            'PASSWORD': DB_PASS,
-            'HOST'    : DB_HOST,
-            'PORT'    : DB_PORT,
-        }
-    }
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
+            'ENGINE': 'psqlextra.backend',
+            'NAME': os.getenv('DB_NAME', 'postgres'),
+            'USER': os.getenv('DB_USERNAME', 'admin'),
+            'PASSWORD': os.getenv('DB_PASS', 'password'),
+            'HOST': os.getenv('DB_HOST', 'orbit-db'),
+            'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
 
@@ -191,6 +181,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# WHITE NOISE
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
+WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 ### Internationalization ###
 
@@ -209,12 +209,8 @@ USE_TZ = True
 ### Static files (CSS, JavaScript, Images) ###
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-#if not DEBUG:
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
