@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'apps.dashboard',
     'apps.location',
     'apps.attendance',
+    'apps.appversion',
 
     # UI & Forms Styling
     'crispy_forms',

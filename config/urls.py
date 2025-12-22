@@ -31,6 +31,7 @@ urlpatterns = [
     path('core/', include(('apps.core.urls', 'core'), namespace="core")),
     path('location/', include(('apps.location.urls', 'location'), namespace="location")),
     path('attendance/', include(('apps.attendance.urls', 'attendance'), namespace="attendance")),
+    path('appversion/', include(('apps.appversion.urls', 'appversion'), namespace="appversion")),
     
     #media
     re_path(r'^media/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT}),
