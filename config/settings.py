@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'apps.location',
     'apps.attendance',
     'apps.appversion',
+    'apps.users',
 
     # UI & Forms Styling
     'crispy_forms',
@@ -253,7 +254,7 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'users.User'
 
 
 ### Security & Cookies ###

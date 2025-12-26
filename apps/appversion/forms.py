@@ -1,10 +1,9 @@
-from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from apps.appversion.models import AppVersion
+from .models import AppVersion
 
-from base.mixins import ActiveNormalUserFormMixin
-from base.forms import BaseModelForm
+from apps.core.mixins import ActiveNormalUserFormMixin
+from apps.core.forms import BaseModelForm
 
 
 class AppVersionForm(ActiveNormalUserFormMixin, BaseModelForm):

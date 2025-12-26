@@ -9,6 +9,7 @@ from rest_framework import serializers
 
 User = get_user_model()
 
+
 def validate_syria_phone(phone):
     pattern = re.compile(r"^(?:\+963|0)9\d{8}$")
     if not pattern.match(phone):

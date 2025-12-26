@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 
-from apps.appversion.models import AppVersion
-from base.tables import BaseTable
+from .models import AppVersion
+from apps.core.tables import BaseTable
 
 
 class AppVersionTable(BaseTable):

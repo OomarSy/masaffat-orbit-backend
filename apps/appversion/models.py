@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from base.models import BaseModel
+
+from apps.core.models import BaseModel
+
 
 class AppVersion(BaseModel):
     

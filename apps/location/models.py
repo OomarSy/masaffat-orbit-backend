@@ -4,8 +4,8 @@ from django.db import models
 
 from django.contrib.auth import get_user_model
 
-from base.mixins import SoftDeleteUniqueMixin
-from base.models import BaseModel
+from apps.core.mixins import SoftDeleteUniqueMixin
+from apps.core.models import BaseModel
 
 User = get_user_model()
 

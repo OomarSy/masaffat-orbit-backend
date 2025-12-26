@@ -1,7 +1,8 @@
 import django_filters
-from apps.attendance.models import Attendance, Overtime
-from base.filters import BaseFilterSet
-from base.mixins import ActiveNormalUserFilterMixin
+
+from .models import Attendance
+from apps.core.filters import BaseFilterSet
+from apps.core.mixins import ActiveNormalUserFilterMixin
 
 
 class AttendanceFilter(ActiveNormalUserFilterMixin, BaseFilterSet):
@@ -14,15 +15,3 @@ class AttendanceFilter(ActiveNormalUserFilterMixin, BaseFilterSet):
     class Meta:
         model = Attendance
         fields = ['user', 'checkin_time']
-
-
-class OvertimeFilter(ActiveNormalUserFilterMixin, BaseFilterSet):
-    start_datetime = django_filters.DateTimeFromToRangeFilter(
-        widget=django_filters.widgets.RangeWidget(
-            attrs={'type': 'datetime-local'}
-        )
-    )
-    
-    class Meta:
-        model = Overtime
-        fields = ['user', 'start_datetime']

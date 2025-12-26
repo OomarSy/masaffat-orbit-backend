@@ -1,5 +1,4 @@
 from packaging import version
-from django.conf import settings
 
 from apps.appversion.models import AppVersion
 
