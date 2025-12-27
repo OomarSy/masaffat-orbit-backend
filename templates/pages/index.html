@@ -4,208 +4,221 @@
 
 <head>
   {% include 'includes/head.html' %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   <style>
     html, body {
-      height: 100%;
       margin: 0;
-      scroll-behavior: smooth;
+      padding: 0;
       font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+      background: #0f172a; /* خلفية داكنة Volt */
+      color: #f1f5f9;
     }
-
     body {
+  display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* التأكد أن الجسم يغطي كل الشاشة */
+  }
+
+  main {
+    flex: 1 0 auto; /* يسمح للـmain بالتوسع */
+  }
+  footer {
+    flex-shrink: 0; /* منع الـfooter من الانكماش */
+  }
+    /* Hero Section */
+    .hero-section {
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
-      background-color: #0f172a;
-    }
-
-    main {
-      flex: 1;
-    }
-
-    /* Hero section */
-    .hero-section {
-      min-height: calc(100vh - 3rem - 3rem);
-      padding-top: 6rem;
-      padding-bottom: 6rem;
-      background: #d4d3d3ff;
-      color: #fff;
+      align-items: center;
+      justify-content: center;
+      min-height: 90vh;
       text-align: center;
-      overflow: hidden;
+      padding: 4rem 1rem;
       position: relative;
-    }
-    
-    /* Animations */
-    .fade-in-up {
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeUp 1s forwards;
-    }
-
-    .fade-in-up.delay-1 {
-      animation-delay: 0.3s;
-    }
-
-    .fade-in-up.delay-2 {
-      animation-delay: 0.6s;
-    }
-
-    .fade-in-up.delay-3 {
-      animation-delay: 0.9s;
-    }
-
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      overflow: hidden;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
     }
 
     .hero-section h1 {
       font-size: 3rem;
-      font-weight: 700;
+      font-weight: 800;
+      background: linear-gradient(90deg, #facc15, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       margin-bottom: 0.5rem;
     }
 
     .hero-section h2 {
       font-size: 1.5rem;
-      color: #111827; /* ← اللون الغامق */
-      margin-bottom: 2rem;
       font-weight: 600;
-    }
-
-    .hero-section .font-small {
-      color: #111827 !important; /* ← اللون الغامق */
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
+      margin-bottom: 2rem;
+      color: #e5e7ebcc;
     }
 
     .hero-logo-wrapper {
-      display: block;
-      margin: 2rem auto 3rem;
-      padding: 1.5rem;
-      background-color: #111827;
+      width: 180px;
+      padding: 1rem;
+      margin: 1.5rem auto;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
       border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-      max-width: 300px;
-      transition: all 0.5s ease;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
     }
 
-    .hero-logo-wrapper:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-    }
-
-    .hero-logo-wrapper img {
-      width: 100%;
-      border-radius: 12px;
-      display: block;
-    }
+    .hero-logo-wrapper img { width: 100%; border-radius: 12px; transition: transform 0.3s ease; }
+    .hero-logo-wrapper:hover img { transform: rotate(8deg) scale(1.05); }
 
     .btn-dashboard {
-      background-color: #ffc107;
-      color: #111827;
-      font-weight: 600;
-      padding: 0.75rem 1.8rem;
+      display: inline-block;
+      padding: 0.75rem 2rem;
       border-radius: 50px;
-      font-size: 1rem;
+      background: linear-gradient(90deg,#facc15,#f97316);
+      color: #111827;
+      font-weight: 700;
       text-decoration: none;
-      box-shadow: 0 5px 15px rgba(255,193,7,0.4);
-      transition: all 0.4s ease;
+      box-shadow: 0 4px 12px rgba(250,204,21,0.4);
+      transition: all 0.3s ease;
     }
 
     .btn-dashboard:hover {
-      background-color: #ffdd57;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(255,193,7,0.6);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(250,204,21,0.6);
     }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .feature-card i { font-size: 2rem; color: #facc15; margin-bottom: 0.5rem; }
+    .feature-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: #f1f5f9; }
+    .feature-card p { font-size: 0.9rem; color: #e5e7ebcc; }
 
     /* Footer */
     footer {
-      background-color: #111827;
+      background: #111827;
+      padding: 0.75rem 0; /* أقل ارتفاع */
       color: #d1d5db;
-      padding-top: 3rem;
-      padding-bottom: 3rem;
+      text-align: center;
+      font-size: 0.85rem;
     }
-
-    footer p {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-
-    .social-buttons li a {
+    footer .social-buttons li { display: inline-block; margin: 0 0.5rem; }
+    footer .social-buttons li a {
       color: #d1d5db;
       font-size: 1.2rem;
       transition: all 0.3s ease;
     }
+    footer .social-buttons li a:hover { color: #facc15; transform: translateY(-2px); }
 
-    .social-buttons li a:hover {
-      color: #0d6efd;
-      transform: translateY(-3px);
-    }
+    /* Animations */
+    .fade-in-up { opacity:0; transform:translateY(20px); animation: fadeUp 1s forwards; }
+    .fade-in-up.delay-1 { animation-delay:0.3s; }
+    .fade-in-up.delay-2 { animation-delay:0.6s; }
+    .fade-in-up.delay-3 { animation-delay:0.9s; }
+    @keyframes fadeUp { to {opacity:1; transform:translateY(0);} }
 
     /* Responsive */
-    @media (max-width: 768px) {
-      .hero-section h1 { font-size: 2.5rem; }
-      .hero-section h2 { font-size: 1.2rem; }
-      .hero-logo { max-width: 180px; margin: 1.5rem auto 2rem; }
-      .btn-dashboard { padding: 0.6rem 1.5rem; font-size: 0.9rem; }
-      footer p { font-size: 0.8rem; }
-      .social-buttons li a { font-size: 1rem; }
+    @media (max-width:768px){
+      .hero-section h1{font-size:2.5rem;}
+      .hero-section h2{font-size:1.2rem;}
+      .hero-logo-wrapper{width:140px;}
     }
+    @media (max-width:480px){
+      .hero-section h1{font-size:2rem;}
+      .hero-section h2{font-size:1rem;}
+      .hero-logo-wrapper{width:120px;}
+    }
+    @media (max-width:768px){
+  .hero-section h1{ font-size:2.2rem; }
+  .hero-section h2{ font-size:1.1rem; }
+  .hero-logo-wrapper{ width:130px; padding:0.8rem; }
+  .features { grid-template-columns: 1fr 1fr; gap:1rem; margin-top:2rem; }
+  .feature-card { padding:1rem; }
+  .btn-dashboard { padding:0.6rem 1.5rem; font-size:0.9rem; }
+}
 
-    @media (max-width: 480px) {
-      .hero-section h1 { font-size: 2rem; }
-      .hero-section h2 { font-size: 1rem; }
-      .hero-logo { max-width: 150px; margin: 1rem auto 1.5rem; }
-      .btn-dashboard { padding: 0.5rem 1.2rem; font-size: 0.85rem; }
-      .social-buttons li a { font-size: 0.9rem; }
-    }
+@media (max-width:480px){
+  .hero-section { padding:3rem 0.5rem; }
+  .hero-section h1{ font-size:1.8rem; }
+  .hero-section h2{ font-size:1rem; }
+  .hero-logo-wrapper{ width:100px; padding:0.5rem; }
+  .features { grid-template-columns:1fr; gap:0.8rem; }
+  .feature-card { padding:0.8rem; font-size:0.85rem; }
+  .btn-dashboard { padding:0.5rem 1rem; font-size:0.85rem; }
+  footer { font-size:0.75rem; padding:0.5rem 0; }
+  footer .social-buttons li a { font-size:1rem; }
+}
   </style>
 </head>
 
 <body>
-
   <main>
-    <!-- Hero -->
     <section class="hero-section">
-      <div class="container">
+      <div class="hero-content">
         <h1 class="fade-in-up delay-1">Orbit CMS</h1>
-        <h2 class="fade-in-up delay-2">Control Management System</h2>
-        <img src="{% static 'img/orbit.png' %}" alt="Orbit Logo" class="hero-logo-wrapper fade-in-up delay-3">
-        <div class="d-flex justify-content-center mb-4 fade-in-up delay-3">
-          <a href="{% url 'dashboard:index' %}" class="btn-dashboard">Go to Dashboard</a>
+        <h2 class="fade-in-up delay-2">Dark & Modern Dashboard</h2>
+        <div class="hero-logo-wrapper fade-in-up delay-3">
+          <img src="{% static 'img/orbit.png' %}" alt="Orbit Logo">
         </div>
-        <span class="font-small fade-in-up delay-3">&copy; Orbit - Coded by Omar Almelhem.</span>
+        <a href="{% url 'dashboard:index' %}" class="btn-dashboard fade-in-up delay-3">Go to Dashboard</a>
+        <div class="features fade-in-up delay-3">
+          <div class="feature-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Analytics</h3>
+            <p>Track performance and metrics in real-time.</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-cogs"></i>
+            <h3>Customizable</h3>
+            <p>Flexible modules and settings for your workflow.</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Secure</h3>
+            <p>Modern security standards for your data safety.</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-mobile-alt"></i>
+            <h3>Responsive</h3>
+            <p>Optimized for all devices with a clean UI.</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
   <footer>
-    <div class="container">
-      <div class="row mb-3">
-        <div class="col-md-8 mx-auto text-center">
-          <p>Orbit is a comprehensive platform that connects users with streamlined management tools. Enjoy easy navigation, real-time updates, and a clean dashboard experience.</p>
-          <ul class="social-buttons list-inline mt-3">
-            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-facebook"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-github"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-dribbble"></i></a></li>
-          </ul>
-        </div>
-      </div>
-      <hr class="border-gray-700">
-      <div class="row">
-        <div class="col text-center">
-          <p class="mb-0">&copy; Orbit - Coded by Omar Almelhem.</p>
-        </div>
-      </div>
-    </div>
+    <p>Orbit CMS - Coded by Omar Almelhem</p>
+    <ul class="social-buttons">
+      <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+      <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+      <li><a href="#"><i class="fab fa-github"></i></a></li>
+      <li><a href="#"><i class="fab fa-dribbble"></i></a></li>
+    </ul>
   </footer>
 
   {% include 'includes/scripts.html' %}
 </body>
-
 </html>
