@@ -23,7 +23,7 @@ class ListUser(BaseListView):
     table_class = UserTable
     filterset_class = UserFilter
     view_name = "Users"
-    add_url_name = 'core:user_create'
+    add_url_name = 'users:user_create'
     segment = "users"
 
 
@@ -39,14 +39,14 @@ class CreateUser(BaseCRUDView, CreateView):
     form_class = UserForm
     template_name = 'generic/form.html'
     create = True
-    success_url = reverse_lazy('core:user_list')
+    success_url = reverse_lazy('users:user_list')
     view_name = "Create User"
 
 
 class UpdateUser(BaseCRUDView, UpdateView):
     model = User
     form_class = UserForm
-    success_url = reverse_lazy('core:user_list')
+    success_url = reverse_lazy('users:user_list')
     view_name = "Update User"
 
 
@@ -62,7 +62,7 @@ class UserLoginView(LoginView):
 
 def logout_view(request):
   logout(request)
-  return redirect('/core/accounts/login/')
+  return redirect('/users/accounts/login/')
   
 def index(request):
     return render(request, 'pages/index.html')

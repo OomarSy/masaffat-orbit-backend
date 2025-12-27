@@ -6,9 +6,9 @@ from apps.users.models import User
 
 class UserTable(BaseTable):
     BUTTONS = {
-        'view': {'label': _('View'), 'url_name': 'core:user_detail'},
-        'edit': {'label': _('Edit'), 'url_name': 'core:user_update'},
-        'delete': {'label': _('Delete'), 'url_name': 'core:user_delete'},
+        'view': {'label': _('View'), 'url_name': 'users:user_detail'},
+        'edit': {'label': _('Edit'), 'url_name': 'users:user_update'},
+        'delete': {'label': _('Delete'), 'url_name': 'users:user_delete'},
     }
 
     class Meta(BaseTable.Meta):

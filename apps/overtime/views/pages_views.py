@@ -16,7 +16,7 @@ class ListOvertime(BaseListView):
     table_class = OvertimeTable
     filterset_class = OvertimeFilter
     view_name = "Overtime"
-    add_url_name = 'attendance:overtime_create'
+    add_url_name = 'overtime:overtime_create'
     segment = "overtime"
 
 
@@ -33,14 +33,15 @@ class CreateOvertime(BaseCRUDView, CreateView):
     form_class = OvertimeForm
     template_name = 'generic/form.html'
     create = True
-    success_url = reverse_lazy('attendance:overtime_list')
+    success_url = reverse_lazy('overtime:overtime_list')
     view_name = "Create Overtime"
     segment = "overtime"
+
 
 class UpdateOvertime(BaseCRUDView, UpdateView):
     model = Overtime
     form_class = OvertimeForm
-    success_url = reverse_lazy('attendance:overtime_list')
+    success_url = reverse_lazy('overtime:overtime_list')
     view_name = "Update Overtime"
     segment = "overtime"
 

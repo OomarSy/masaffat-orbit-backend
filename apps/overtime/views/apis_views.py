@@ -10,7 +10,8 @@ from ..serializers import OvertimeSerializer
 from apps.core.pagination import SmallResultsPagination
 from apps.core.utils import api_response
 
-class OvertimeAPI_V1(APIView):
+
+class OvertimeCreateAPI_V1(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -58,7 +59,7 @@ class OvertimeAPI_V1(APIView):
         )
 
 
-class UserOvertimeListAPI_v1(ListAPIView):
+class OvertimeListAPI_v1(ListAPIView):
     serializer_class = OvertimeSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = SmallResultsPagination

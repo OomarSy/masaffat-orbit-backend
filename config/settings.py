@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'apps.attendance',
     'apps.appversion',
     'apps.users',
+    'apps.overtime',
 
     # UI & Forms Styling
     'crispy_forms',
@@ -220,7 +221,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 ### Login & Email Settings ###
 
-LOGIN_URL = '/core/accounts/login/'
+LOGIN_URL = '/users/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
 ### REST Framework & JWT Configuration ###

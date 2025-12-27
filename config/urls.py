@@ -18,7 +18,7 @@ urlpatterns = [
     
     path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
-    path('dashboard/pages/', include(('apps.dashboard.urls.pages_urls', 'dashboard-pages'), namespace="dashboard-pages")),
+    path('dashboard/', include(('apps.dashboard.urls.pages', 'dashboard'), namespace="dashboard")),
     
     path("admin/", admin.site.urls),
     
@@ -28,17 +28,20 @@ urlpatterns = [
     
     
     #Apps URLs
-    path('users/pages/', include(('apps.users.urls.pages_urls', 'users-pages'), namespace="users-pages")),
-    path('users/api/', include(('apps.users.urls.apis_urls', 'users-apis'), namespace="users-apis")),
+    path('users/', include(('apps.users.urls.pages', 'users'), namespace="users")),
+    path('users/api/v1/', include(('apps.users.urls.api_v1', 'users-api-v1'), namespace="users-api-v1")),
     
-    path('location/pages/', include(('apps.location.urls.pages_urls', 'location-pages'), namespace="location-pages")),
-    path('location/api/', include(('apps.location.urls.apis_urls', 'location-apis'), namespace="location-apis")),
+    path('location/', include(('apps.location.urls.pages', 'location'), namespace="location")),
+    path('location/api/v1/', include(('apps.location.urls.api_v1', 'location-api-v1'), namespace="location-api-v1")),
+
+    path('attendance/', include(('apps.attendance.urls.pages', 'attendance'), namespace="attendance")),
+    path('attendance/api/v1/', include(('apps.attendance.urls.api_v1', 'attendance-api-v1'), namespace="attendance-api-v1")),
+
+    path('overtime/', include(('apps.overtime.urls.pages', 'overtime'), namespace="overtime")),
+    path('overtime/api/v1/', include(('apps.overtime.urls.api_v1', 'overtime-api-v1'), namespace="overtime-api-v1")),
     
-    path('attendance/pages/', include(('apps.attendance.urls.pages_urls', 'attendance-pages'), namespace="attendance-pages")),
-    path('attendance/api/', include(('apps.attendance.urls.apis_urls', 'attendance-apis'), namespace="attendance-apis")),
-    
-    path('appversion/pages/', include(('apps.appversion.urls.pages_urls', 'appversion-pages'), namespace="appversion-pages")),
-    path('appversion/api/', include(('apps.appversion.urls.apis_urls', 'appversion-apis'), namespace="appversion-apis")),
+    path('appversion/', include(('apps.appversion.urls.pages', 'appversion'), namespace="appversion")),
+    path('appversion/api/v1/', include(('apps.appversion.urls.api_v1', 'appversion-api-v1'), namespace="appversion-api-v1")),
     
     #media
     re_path(r'^media/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT}),
