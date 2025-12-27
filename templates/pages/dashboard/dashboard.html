@@ -14,6 +14,31 @@
           </div>
           <h6 class="text-uppercase text-muted fw-semibold mt-4 mb-2">Total Users</h6>
           <h2 class="fw-bold text-dark mb-0">{{ total_users }}</h2>
+
+          <button class="btn btn-sm btn-outline-primary mt-3"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#totalUsersCollapse"
+                  aria-expanded="false"
+                  aria-controls="totalUsersCollapse"
+                  {% if all_users|length == 0 %}disabled{% endif %}>
+              Show Users
+          </button>
+
+          <div class="collapse mt-3 w-100" id="totalUsersCollapse">
+            <ul class="list-group list-group-flush text-start shadow-sm rounded">
+              {% for user in all_users %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ user.username }}
+                {% if user.is_active %}
+                  <span class="badge bg-success rounded-pill">Online</span>
+                {% else %}
+                  <span class="badge bg-danger rounded-pill">Offline</span>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -27,6 +52,29 @@
           </div>
           <h6 class="text-uppercase text-muted fw-semibold mt-4 mb-2">Online Users</h6>
           <h2 class="fw-bold text-success mb-0">{{ online_users }}</h2>
+
+          <button class="btn btn-sm btn-outline-success mt-3"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#onlineUsersCollapse"
+                  aria-expanded="false"
+                  aria-controls="onlineUsersCollapse"
+                  {% if online_users == 0 %}disabled{% endif %}>
+              Show Users
+          </button>
+
+          <div class="collapse mt-3 w-100" id="onlineUsersCollapse">
+            <ul class="list-group list-group-flush text-start shadow-sm rounded">
+              {% for user in all_users %}
+                {% if user.is_active %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ user.username }}
+                  <span class="badge bg-success rounded-pill">Online</span>
+                </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -40,6 +88,29 @@
           </div>
           <h6 class="text-uppercase text-muted fw-semibold mt-4 mb-2">Offline Users</h6>
           <h2 class="fw-bold text-danger mb-0">{{ offline_users }}</h2>
+
+          <button class="btn btn-sm btn-outline-danger mt-3"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#offlineUsersCollapse"
+                  aria-expanded="false"
+                  aria-controls="offlineUsersCollapse"
+                  {% if offline_users == 0 %}disabled{% endif %}>
+              Show Users
+          </button>
+
+          <div class="collapse mt-3 w-100" id="offlineUsersCollapse">
+            <ul class="list-group list-group-flush text-start shadow-sm rounded">
+              {% for user in all_users %}
+                {% if not user.is_active %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ user.username }}
+                  <span class="badge bg-danger rounded-pill">Offline</span>
+                </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -77,6 +148,18 @@
 
   .card-hover:hover h2 {
     color: #0d6efd;
+  }
+
+  /* Collapse List */
+  .list-group-item {
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem;
+    border: 0;
+    border-bottom: 1px solid #f1f3fa;
+  }
+
+  .list-group-item:last-child {
+    border-bottom: 0;
   }
 </style>
 {% endblock content %}

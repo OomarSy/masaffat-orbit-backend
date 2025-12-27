@@ -1,5 +1,5 @@
 from django.utils import timezone
-from apps.location.models import EmployLocation
+from apps.location.models import EmployLocation, EmployLocationHistory
 from datetime import timedelta
 
 
@@ -11,6 +11,13 @@ class EmployLocationService:
         location.longitude = longitude
         location.updated_at = timezone.now()
         location.save()
+
+        EmployLocationHistory.objects.create(
+            user=user,
+            latitude=latitude,
+            longitude=longitude,
+        )
+
         return location
 
     @staticmethod

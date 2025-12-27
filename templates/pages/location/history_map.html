@@ -1,0 +1,66 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+  <!-- Navigation tabs -->
+  <ul class="nav nav-tabs mb-4" id="location-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'location:employee_locations_page' %}">Live</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="{% url 'location:employee_locations_history' %}">History</a>
+    </li>
+  </ul>
+
+  <div class="row mb-2">
+    <div class="col-md-3">
+        <label>User:</label>
+        <select id="user-select" class="form-control">
+            <option value="">All Users</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label>From:</label>
+        <input type="datetime-local" id="from-date" class="form-control">
+    </div>
+    <div class="col-md-3">
+        <label>To:</label>
+        <input type="datetime-local" id="to-date" class="form-control">
+    </div>
+    <div class="col-md-2 d-flex align-items-end gap-2">
+        <button id="filter-btn" class="btn btn-primary w-100">Filter</button>
+        <a href="{% url request.resolver_match.view_name %}" class="btn btn-secondary w-100">Reset</a>
+    </div>
+  </div>
+
+  <div id="no-results-message" class="alert alert-warning d-none">
+    No location history found for the selected criteria.
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <div id="history-map" style="height: 600px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<!-- Your custom map JS -->
+<script src="{% static 'assets/js/user_locations_history_map.js' %}"></script>
+{% endblock extra_scripts %}

@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function fetchEmployLocations() {
         try {
-            const response = await fetch('/location/api/v1/cms/user-locations/', { credentials: 'same-origin' });
+            const response = await fetch('/location/api/v1/cms/employee-locations/', { credentials: 'same-origin' });
             if (!response.ok) return;
 
             const data = await response.json();

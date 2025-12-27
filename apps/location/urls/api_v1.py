@@ -9,7 +9,7 @@ urlpatterns = [
     path('update/location/', apis_views.UpdateLocationAPI_V1.as_view(), name='update_location_api'),
     
     # cms api paths
-    path('cms/user-locations/', apis_views.CMSEmployLocationsAPI_V1.as_view(), name='cms_user_locations_api_v1'),
-    
+    path('cms/employee-locations/', apis_views.EmployLocationsAPI_V1.as_view(), name='employee_locations_api_v1'),
+    path('cms/employee-locations-history/', apis_views.EmployeeLocationHistoryAPI_V1.as_view(), name='employee_locations_history_api_v1')
 
 ]
