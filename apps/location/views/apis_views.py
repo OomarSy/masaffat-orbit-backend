@@ -5,13 +5,13 @@ from rest_framework import status
 
 from django.utils import timezone
 
-from ..serializers import UserLocationCMSSerializer, UserLocationSerializer
-from ..services.location import UserLocationService
+from ..serializers import EmployLocationCMSSerializer, EmployLocationSerializer
+from ..services.location import EmployLocationService
 
 from apps.core.utils import api_response
 
 
-class CMSUserLocationsAPI_V1(APIView):
+class CMSEmployLocationsAPI_V1(APIView):
     """
     Return all users with their coordinates for displaying on the CMS map.
     Only accessible by admin/staff users.
@@ -19,8 +19,8 @@ class CMSUserLocationsAPI_V1(APIView):
     permission_classes = [IsAdminUser]
     
     def get(self, request):
-        locations = UserLocationService.get_all_user_locations()
-        serializer = UserLocationCMSSerializer(locations, many=True)
+        locations = EmployLocationService.get_all_user_locations()
+        serializer = EmployLocationCMSSerializer(locations, many=True)
 
         return api_response(
             errorno=0,
@@ -32,7 +32,7 @@ class CMSUserLocationsAPI_V1(APIView):
 
 class UpdateLocationAPI_V1(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = UserLocationSerializer
+    serializer_class = EmployLocationSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -47,7 +47,7 @@ class UpdateLocationAPI_V1(APIView):
         data = serializer.validated_data
 
         try:
-            location = UserLocationService.update_user_location(
+            location = EmployLocationService.update_user_location(
                 user=request.user,
                 latitude=data["latitude"],
                 longitude=data["longitude"],

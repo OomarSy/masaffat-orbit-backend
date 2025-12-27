@@ -1,11 +1,11 @@
 import django_filters
 
-from .models import Attendance
+from .models import EmployeeAttendance
 from apps.core.filters import BaseFilterSet
 from apps.core.mixins import ActiveNormalUserFilterMixin
 
 
-class AttendanceFilter(ActiveNormalUserFilterMixin, BaseFilterSet):
+class EmployeeAttendanceFilter(ActiveNormalUserFilterMixin, BaseFilterSet):
     checkin_time = django_filters.DateTimeFromToRangeFilter(
         widget=django_filters.widgets.RangeWidget(
             attrs={'type': 'datetime-local'}
@@ -13,5 +13,5 @@ class AttendanceFilter(ActiveNormalUserFilterMixin, BaseFilterSet):
     )
     
     class Meta:
-        model = Attendance
+        model = EmployeeAttendance
         fields = ['user', 'checkin_time']

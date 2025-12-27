@@ -4,15 +4,14 @@ from rest_framework import status
 
 from apps.core.utils import api_response
 
-from ..services.attendance import AttendanceService
-from ..serializers import AttendanceSerializer
+from ..services.attendance import EmployeeAttendanceService
+from ..serializers import EmployeeAttendanceSerializer
 
 
 #API Views
 class CheckinAPI_V1(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = AttendanceSerializer
-
+    serializer_class = EmployeeAttendanceSerializer
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
@@ -24,7 +23,7 @@ class CheckinAPI_V1(APIView):
             )
 
         data = serializer.validated_data
-        result = AttendanceService.checkin(
+        result = EmployeeAttendanceService.checkin(
             user=request.user,
             latitude=float(data["latitude"]),
             longitude=float(data["longitude"]),
@@ -61,7 +60,7 @@ class CheckinAPI_V1(APIView):
 
 class CheckoutAPI_V1(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = AttendanceSerializer
+    serializer_class = EmployeeAttendanceSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -75,7 +74,7 @@ class CheckoutAPI_V1(APIView):
 
         data = serializer.validated_data
 
-        result = AttendanceService.checkout(
+        result = EmployeeAttendanceService.checkout(
             user=request.user,
             latitude=float(data["latitude"]),
             longitude=float(data["longitude"]),

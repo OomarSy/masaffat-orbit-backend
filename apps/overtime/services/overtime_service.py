@@ -5,11 +5,11 @@ from datetime import datetime, timedelta
 
 from decimal import Decimal
 
-from ..models import Overtime
+from ..models import EmployeeOvertime
 from apps.attendance.utils import ensure_aware
 
 
-class OvertimeService:
+class EmployeeOvertimeService:
 
     @staticmethod
     def validate_entries(user, entries):
@@ -40,7 +40,7 @@ class OvertimeService:
                 })
                 continue
 
-            if Overtime.objects.filter(
+            if EmployeeOvertime.objects.filter(
                 user=user,
                 start_datetime__lt=end_dt,
                 end_datetime__gt=start_dt
@@ -84,7 +84,7 @@ class OvertimeService:
             delta = end_dt - start_dt
             hours = Decimal(round(delta.total_seconds() / 3600, 2))
 
-            overtime = Overtime.objects.create(
+            overtime = EmployeeOvertime.objects.create(
                 user=user,
                 start_datetime=start_dt,
                 end_datetime=end_dt,
@@ -102,7 +102,7 @@ class OvertimeService:
 
         return created
 
-class ListOvertimeService:
+class ListEmployeeOvertimeService:
 
     @staticmethod
     def get_user_overtimes(user, from_date=None, to_date=None):
@@ -131,7 +131,7 @@ class ListOvertimeService:
                 to_dt = None
 
         # بناء الـ queryset
-        qs = Overtime.objects.filter(user=user)
+        qs = EmployeeOvertime.objects.filter(user=user)
         if from_dt:
             qs = qs.filter(start_datetime__gte=from_dt)
         if to_dt:

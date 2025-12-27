@@ -5,6 +5,6 @@ from ..views import pages_views
 
 urlpatterns = [
     
-    path('cms/map/', pages_views.UserLocationsPageView.as_view(), name='User_Locations_Page'),
+    path('cms/map/', pages_views.EmployeeLocationsPageView.as_view(), name='Employee_Locations_Page'),
 
 ]

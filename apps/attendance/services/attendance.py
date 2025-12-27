@@ -3,10 +3,10 @@ import math
 from django.utils import timezone
 from django.conf import settings
 
-from apps.attendance.models import Attendance
+from apps.attendance.models import EmployeeAttendance
 
 
-class AttendanceService:
+class EmployeeAttendanceService:
 
     @staticmethod
     def calculate_distance_m(lat1, lon1, lat2, lon2):
@@ -24,7 +24,7 @@ class AttendanceService:
     @staticmethod
     def get_today_attendance(user):
         today = timezone.now().date()
-        return Attendance.objects.filter(
+        return EmployeeAttendance.objects.filter(
             user=user,
             checkin_time__date=today
         ).first()
@@ -37,7 +37,7 @@ class AttendanceService:
     @staticmethod
     def checkin(user, latitude, longitude):
         
-        if AttendanceService.is_weekend():
+        if EmployeeAttendanceService.is_weekend():
             return {
                 "status": "weekend",
                 "message": "عذراً، لا يمكن تسجيل الدوام في أيام العطلة (الجمعة والسبت)."
@@ -48,7 +48,7 @@ class AttendanceService:
         radius = settings.COMPANY_RADIUS_METERS
 
         # distance check
-        distance = AttendanceService.calculate_distance_m(
+        distance = EmployeeAttendanceService.calculate_distance_m(
             latitude, longitude, company_lat, company_lon
         )
 
@@ -58,14 +58,14 @@ class AttendanceService:
                 "message": "عذراً، لا يمكن تسجيل الدوام خارج موقع الشركة."
             }
 
-        today_attendance = AttendanceService.get_today_attendance(user)
+        today_attendance = EmployeeAttendanceService.get_today_attendance(user)
         if today_attendance:
             return {
                 "status": "already_checked_in",
                 "message": "لقد تم تسجيل الدوام مسبقاً اليوم."
             }
 
-        Attendance.objects.create(user=user)
+        EmployeeAttendanceService.objects.create(user=user)
         return {
             "status": "success",
             "message": "تم تسجيل الدوام بنجاح."
@@ -74,7 +74,7 @@ class AttendanceService:
     @staticmethod
     def checkout(user, latitude, longitude):
         
-        if AttendanceService.is_weekend():
+        if EmployeeAttendanceService.is_weekend():
             return {
                 "status": "weekend",
                 "message": "لا يمكن تسجيل الخروج خلال أيام العطلة."
@@ -85,7 +85,7 @@ class AttendanceService:
         radius = settings.COMPANY_RADIUS_METERS
 
         # check distance
-        distance = AttendanceService.calculate_distance_m(
+        distance = EmployeeAttendanceService.calculate_distance_m(
             latitude, longitude, company_lat, company_lon
         )
 
@@ -95,7 +95,7 @@ class AttendanceService:
                 "message": "عذراً، لا يمكن تسجيل الخروج خارج موقع الشركة."
             }
 
-        today_attendance = AttendanceService.get_today_attendance(user)
+        today_attendance = EmployeeAttendanceService.get_today_attendance(user)
 
         if not today_attendance:
             return {

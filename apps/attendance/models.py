@@ -8,7 +8,7 @@ from apps.core.models import BaseModel
 User = get_user_model()
 
 
-class Attendance(SoftDeleteUniqueMixin, BaseModel):
+class EmployeeAttendance(SoftDeleteUniqueMixin, BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="attendances")
     checkin_time = models.DateTimeField(default=timezone.now)
     checkout_time = models.DateTimeField(null=True, blank=True)

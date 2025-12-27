@@ -10,7 +10,7 @@ from apps.core.models import BaseModel
 User = get_user_model()
 
 
-class UserLocation(SoftDeleteUniqueMixin, BaseModel):
+class EmployLocation(SoftDeleteUniqueMixin, BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="location")
     latitude = models.DecimalField(max_digits=30, decimal_places=15, null=True, blank=True)
     longitude = models.DecimalField(max_digits=30, decimal_places=15, null=True, blank=True)

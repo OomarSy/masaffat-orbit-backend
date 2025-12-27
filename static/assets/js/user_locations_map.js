@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
         color: 'grey'
     });
 
-    async function fetchUserLocations() {
+    async function fetchEmployLocations() {
         try {
             const response = await fetch('/location/api/v1/cms/user-locations/', { credentials: 'same-origin' });
             if (!response.ok) return;
@@ -91,6 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    fetchUserLocations();
-    setInterval(fetchUserLocations, 5000);
+    fetchEmployLocations();
+    setInterval(fetchEmployLocations, 5000);
 });

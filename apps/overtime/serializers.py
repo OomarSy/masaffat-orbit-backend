@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from .models import Overtime
+from .models import EmployeeOvertime
 
 
-class OvertimeEntrySerializer(serializers.Serializer):
+class EmployeeOvertimeEntrySerializer(serializers.Serializer):
     start_date = serializers.DateField()
     start_time = serializers.TimeField()
     end_date = serializers.DateField()
@@ -11,9 +11,9 @@ class OvertimeEntrySerializer(serializers.Serializer):
     note = serializers.CharField(required=False, allow_blank=True)
 
 
-class OvertimeSerializer(serializers.ModelSerializer):
+class EmployeeOvertimeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Overtime
+        model = EmployeeOvertime
         fields = (
             "id",
             "start_datetime",

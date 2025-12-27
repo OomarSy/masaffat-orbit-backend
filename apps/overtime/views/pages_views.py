@@ -1,52 +1,52 @@
 from django.views.generic import DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 
-from ..filters import OvertimeFilter
-from ..tables import OvertimeTable
-from ..forms import OvertimeForm
-from ..models import Overtime
+from ..filters import EmployeeOvertimeFilter
+from ..tables import EmployeeOvertimeTable
+from ..forms import EmployeeOvertimeForm
+from ..models import EmployeeOvertime
 
 
 from apps.core.views.pages_views import BaseCRUDView, BaseDeleteView, BaseListView
 
 
 # Create your views here.
-class ListOvertime(BaseListView):
-    model = Overtime
-    table_class = OvertimeTable
-    filterset_class = OvertimeFilter
-    view_name = "Overtime"
-    add_url_name = 'overtime:overtime_create'
-    segment = "overtime"
+class ListEmployeeOvertime(BaseListView):
+    model = EmployeeOvertime
+    table_class = EmployeeOvertimeTable
+    filterset_class = EmployeeOvertimeFilter
+    view_name = "EmployeeOvertime"
+    add_url_name = 'overtime:employeeovertime_create'
+    segment = "employeeovertime"
 
 
-class DetailsOvertime(BaseCRUDView, DetailView):
-    model = Overtime
-    form_class = OvertimeForm
-    view_name = "Overtime Details"
+class DetailsEmployeeOvertime(BaseCRUDView, DetailView):
+    model = EmployeeOvertime
+    form_class = EmployeeOvertimeForm
+    view_name = "Employee Overtime Details"
     details = True
-    segment = "overtime"
+    segment = "employeeovertime"
+    
 
-
-class CreateOvertime(BaseCRUDView, CreateView):
-    model = Overtime
-    form_class = OvertimeForm
+class CreateEmployeeOvertime(BaseCRUDView, CreateView):
+    model = EmployeeOvertime
+    form_class = EmployeeOvertimeForm
     template_name = 'generic/form.html'
     create = True
-    success_url = reverse_lazy('overtime:overtime_list')
+    success_url = reverse_lazy('overtime:employeeovertime_list')
     view_name = "Create Overtime"
-    segment = "overtime"
+    segment = "employeeovertime"
 
 
-class UpdateOvertime(BaseCRUDView, UpdateView):
-    model = Overtime
-    form_class = OvertimeForm
-    success_url = reverse_lazy('overtime:overtime_list')
+class UpdateEmployeeOvertime(BaseCRUDView, UpdateView):
+    model = EmployeeOvertime
+    form_class = EmployeeOvertimeForm
+    success_url = reverse_lazy('overtime:employeeovertime_list')
     view_name = "Update Overtime"
-    segment = "overtime"
+    segment = "employeeovertime"
 
 
-class DeleteOvertime(BaseDeleteView):
-    model = Overtime
+class DeleteEmployeeOvertime(BaseDeleteView):
+    model = EmployeeOvertime
     view_name = "Delete Overtime"
-    segment = "overtime"
+    segment = "employeeovertime"

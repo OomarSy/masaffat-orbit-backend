@@ -9,8 +9,8 @@ from apps.core.models import BaseModel
 User = get_user_model()
 
 
-class Overtime(SoftDeleteUniqueMixin, BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="overtimes")
+class EmployeeOvertime(SoftDeleteUniqueMixin, BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="employee_overtimes")
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     hours = models.DecimalField(max_digits=5, decimal_places=2)

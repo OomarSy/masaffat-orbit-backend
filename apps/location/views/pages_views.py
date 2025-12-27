@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import TemplateView
 
 
-class UserLocationsPageView(UserPassesTestMixin, TemplateView):
+class EmployeeLocationsPageView(UserPassesTestMixin, TemplateView):
     template_name = "pages/location/map.html"
     segment = "location"
     def test_func(self):

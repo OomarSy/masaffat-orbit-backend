@@ -1,12 +1,12 @@
 from django.utils import timezone
-from apps.location.models import UserLocation
+from apps.location.models import EmployLocation
 from datetime import timedelta
 
 
-class UserLocationService:
+class EmployLocationService:
     @staticmethod
     def update_user_location(user, latitude, longitude):
-        location, created = UserLocation.objects.get_or_create(user=user)
+        location, created = EmployLocation.objects.get_or_create(user=user)
         location.latitude = latitude
         location.longitude = longitude
         location.updated_at = timezone.now()
@@ -19,7 +19,7 @@ class UserLocationService:
         Return all users with their latest coordinates.
         Adds an 'is_online' attribute based on the last updated timestamp.
         """
-        locations = UserLocation.objects.select_related("user").all()
+        locations = EmployLocation.objects.select_related("user").all()
         now = timezone.now()
 
         for loc in locations:
@@ -33,4 +33,4 @@ class UserLocationService:
 
     @staticmethod
     def get_all_locations():
-        return UserLocation.objects.select_related('user').all()
+        return EmployLocation.objects.select_related('user').all()

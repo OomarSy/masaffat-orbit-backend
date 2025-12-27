@@ -4,7 +4,7 @@ from django.core.validators import FileExtensionValidator
 from apps.core.models import BaseModel
 
 
-class AppVersion(BaseModel):
+class AndroidAppRelease(BaseModel):
     
     version = models.CharField(max_length=20, unique=True)
     minimum_supported_version = models.CharField(max_length=20)

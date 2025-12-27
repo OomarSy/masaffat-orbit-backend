@@ -1,6 +1,6 @@
 from packaging import version
 
-from apps.appversion.models import AppVersion
+from apps.appversion.models import AndroidAppRelease
 
 
 class AppUpdateService:
@@ -10,7 +10,7 @@ class AppUpdateService:
 
     @staticmethod
     def check_update(current_version: str, request=None):
-        latest_version_obj = AppVersion.objects.filter(is_active=True).order_by('-created_at').first()
+        latest_version_obj = AndroidAppRelease.objects.filter(is_active=True).order_by('-created_at').first()
 
         if not latest_version_obj:
             return {

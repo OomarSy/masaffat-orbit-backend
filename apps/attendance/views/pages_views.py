@@ -8,50 +8,50 @@ from django.urls import reverse_lazy
 from apps.core.views.pages_views import BaseCRUDView, BaseDeleteView, BaseListView
 from apps.core.utils import api_response
 
-from ..filters import AttendanceFilter
-from ..tables import AttendanceTable
-from ..services.attendance import AttendanceService
-from ..forms import AttendanceForm
-from ..models import Attendance
-from ..serializers import AttendanceSerializer
+from ..filters import EmployeeAttendanceFilter
+from ..tables import EmployeeAttendanceTable
+from ..services.attendance import EmployeeAttendanceService
+from ..forms import EmployeeAttendanceForm
+from ..models import EmployeeAttendance
+from ..serializers import EmployeeAttendanceSerializer
 
 
-# Attendance Views
-class ListAttendance(BaseListView):
-    model = Attendance
-    table_class = AttendanceTable
-    filterset_class = AttendanceFilter
-    view_name = "Attendance"
-    add_url_name = 'attendance:attendance_create'
+# Employee Attendance Views
+class ListEmployeeAttendance(BaseListView):
+    model = EmployeeAttendance
+    table_class = EmployeeAttendanceTable
+    filterset_class = EmployeeAttendanceFilter
+    view_name = "Employee Attendance"
+    add_url_name = 'attendance:employeeattendance_create'
 
 
-class DetailsAttendance(BaseCRUDView, DetailView):
-    model = Attendance
-    form_class = AttendanceForm
-    view_name = "Attendance Details"
+class DetailsEmployeeAttendance(BaseCRUDView, DetailView):
+    model = EmployeeAttendance
+    form_class = EmployeeAttendanceForm
+    view_name = "Employee Attendance Details"
     details = True
-    segment = "attendance"
+    segment = "employeeattendance"
 
 
-class CreateAttendance(BaseCRUDView, CreateView):
-    model = Attendance
-    form_class = AttendanceForm
+class CreateEmployeeAttendance(BaseCRUDView, CreateView):
+    model = EmployeeAttendance
+    form_class = EmployeeAttendanceForm
     template_name = 'generic/form.html'
     create = True
-    success_url = reverse_lazy('attendance:attendance_list')
-    view_name = "Create Attendance"
-    segment = "attendance"
+    success_url = reverse_lazy('attendance:employeeattendance_list')
+    view_name = "Create Employee Attendance"
+    segment = "employeeattendance"
 
 
-class UpdateAttendance(BaseCRUDView, UpdateView):
-    model = Attendance
-    form_class = AttendanceForm
-    success_url = reverse_lazy('attendance:attendance_list')
-    view_name = "Update Attendance"
-    segment = "attendance"
+class UpdateEmployeeAttendance(BaseCRUDView, UpdateView):
+    model = EmployeeAttendance
+    form_class = EmployeeAttendanceForm
+    success_url = reverse_lazy('attendance:employeeattendance_list')
+    view_name = "Update Employee Attendance"
+    segment = "employeeattendance"
 
 
-class DeleteAttendance(BaseDeleteView):
-    model = Attendance
-    view_name = "Delete Attendance"
-    segment = "attendance"
+class DeleteEmployeeAttendance(BaseDeleteView):
+    model = EmployeeAttendance
+    view_name = "Delete Employee Attendance"
+    segment = "employeeattendance"

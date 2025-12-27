@@ -3,48 +3,48 @@ from django.urls import reverse_lazy
 
 from apps.core.views.pages_views import BaseCRUDView, BaseDeleteView, BaseListView
 
-from ..filters import AppVersionFilter
-from ..forms import AppVersionForm
-from ..models import AppVersion
-from ..tables import AppVersionTable
+from ..filters import AndroidAppReleaseFilter
+from ..forms import AndroidAppReleaseForm
+from ..models import AndroidAppRelease
+from ..tables import AndroidAppReleaseTable
 
 
-# AppVersion Views
-class ListAppVersion(BaseListView):
-    model = AppVersion
-    table_class = AppVersionTable
-    filterset_class = AppVersionFilter
-    view_name = "AppVersion"
-    add_url_name = 'appversion:appversion_create'
-    segment = "appversion"
+# AndroidAppRelease Views
+class ListAndroidAppRelease(BaseListView):
+    model = AndroidAppRelease
+    table_class = AndroidAppReleaseTable
+    filterset_class = AndroidAppReleaseFilter
+    view_name = "Android App Release"
+    add_url_name = 'appversion:androidapprelease_create'
+    segment = "androidapprelease"
 
 
-class DetailsAppVersion(BaseCRUDView, DetailView):
-    model = AppVersion
-    form_class = AppVersionForm
-    view_name = "AppVersion Details"
+class DetailsAndroidAppRelease(BaseCRUDView, DetailView):
+    model = AndroidAppRelease
+    form_class = AndroidAppReleaseForm
+    view_name = "Android App Release Details"
     details = True
-    segment = "appversion"
+    segment = "androidapprelease"
 
 
-class CreateAppVersion(BaseCRUDView, CreateView):
-    model = AppVersion
-    form_class = AppVersionForm
+class CreateAndroidAppRelease(BaseCRUDView, CreateView):
+    model = AndroidAppRelease
+    form_class = AndroidAppReleaseForm
     template_name = 'generic/form.html'
     create = True
-    success_url = reverse_lazy('appversion:appversion_list')
-    view_name = "Create AppVersion"
-    segment = "appversion"
+    success_url = reverse_lazy('appversion:androidapprelease_list')
+    view_name = "Create Android App Release"
+    segment = "androidapprelease"
 
-class UpdateAppVersion(BaseCRUDView, UpdateView):
-    model = AppVersion
-    form_class = AppVersionForm
-    success_url = reverse_lazy('appversion:appversion_list')
-    view_name = "Update AppVersion"
-    segment = "appversion"
+class UpdateAndroidAppRelease(BaseCRUDView, UpdateView):
+    model = AndroidAppRelease
+    form_class = AndroidAppReleaseForm
+    success_url = reverse_lazy('appversion:androidapprelease_list')
+    view_name = "Update Android App Release"
+    segment = "androidapprelease"
 
 
-class DeleteAppVersion(BaseDeleteView):
-    model = AppVersion
-    view_name = "Delete AppVersion"
-    segment = "appversion"
+class DeleteAndroidAppRelease(BaseDeleteView):
+    model = AndroidAppRelease
+    view_name = "Delete Android App Release"
+    segment = "androidapprelease"

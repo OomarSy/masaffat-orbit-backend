@@ -31,31 +31,31 @@
 
         <!-- Locations -->
         <li class="nav-item {% if 'location' in segment %}active{% endif %}">
-            <a href="{% url 'location:User_Locations_Page' %}" class="nav-link d-flex align-items-center px-3">
+            <a href="{% url 'location:Employee_Locations_Page' %}" class="nav-link d-flex align-items-center px-3">
                 <i class="fas fa-map-marker-alt me-2"></i>
                 <span>{% trans "Locations" %}</span>
             </a>
         </li>
 
         <!-- Attendance -->
-        <li class="nav-item {% if 'attendance' in segment %}active{% endif %}">
-            <a href="{% url 'attendance:attendance_list' %}" class="nav-link d-flex align-items-center px-3">
+        <li class="nav-item {% if 'employeeattendance' in segment %}active{% endif %}">
+            <a href="{% url 'attendance:employeeattendance_list' %}" class="nav-link d-flex align-items-center px-3">
                 <i class="fas fa-calendar-check me-2"></i>
                 <span>{% trans "Attendance" %}</span>
             </a>
         </li>
 
         <!-- Overtime -->
-        <li class="nav-item {% if 'overtime' in segment %}active{% endif %}">
-            <a href="{% url 'overtime:overtime_list' %}" class="nav-link d-flex align-items-center px-3">
+        <li class="nav-item {% if 'employeeovertime' in segment %}active{% endif %}">
+            <a href="{% url 'overtime:employeeovertime_list' %}" class="nav-link d-flex align-items-center px-3">
                 <i class="fas fa-clock me-2"></i>
                 <span>{% trans "Overtime" %}</span>
             </a>
         </li>
 
         <!-- App Version -->
-        <li class="nav-item {% if 'appversion' in segment %}active{% endif %}">
-            <a href="{% url 'appversion:appversion_list' %}" class="nav-link d-flex align-items-center px-3">
+        <li class="nav-item {% if 'androidapprelease' in segment %}active{% endif %}">
+            <a href="{% url 'appversion:androidapprelease_list' %}" class="nav-link d-flex align-items-center px-3">
                 <i class="fas fa-mobile-alt me-2"></i>
                 <span>{% trans "App Version" %}</span>
             </a>

@@ -3,9 +3,9 @@ from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework import status
 
-from ..services.overtime_service import ListOvertimeService, OvertimeService
-from ..serializers import OvertimeEntrySerializer
-from ..serializers import OvertimeSerializer
+from ..services.overtime_service import ListEmployeeOvertimeService, EmployeeOvertimeService
+from ..serializers import EmployeeOvertimeEntrySerializer
+from ..serializers import EmployeeOvertimeSerializer
 
 from apps.core.pagination import SmallResultsPagination
 from apps.core.utils import api_response
@@ -24,7 +24,7 @@ class OvertimeCreateAPI_V1(APIView):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-        serializer = OvertimeEntrySerializer(data=entries, many=True)
+        serializer = EmployeeOvertimeEntrySerializer(data=entries, many=True)
         if not serializer.is_valid():
             return api_response(
                 errorno=2,
@@ -33,7 +33,7 @@ class OvertimeCreateAPI_V1(APIView):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-        errors = OvertimeService.validate_entries(
+        errors = EmployeeOvertimeService.validate_entries(
             request.user,
             serializer.validated_data
         )
@@ -46,7 +46,7 @@ class OvertimeCreateAPI_V1(APIView):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-        created = OvertimeService.create_overtime(
+        created = EmployeeOvertimeService.create_overtime(
             request.user,
             serializer.validated_data
         )
@@ -60,12 +60,12 @@ class OvertimeCreateAPI_V1(APIView):
 
 
 class OvertimeListAPI_v1(ListAPIView):
-    serializer_class = OvertimeSerializer
+    serializer_class = EmployeeOvertimeSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = SmallResultsPagination
 
     def get_queryset(self):
-        return ListOvertimeService.get_user_overtimes(
+        return ListEmployeeOvertimeService.get_user_overtimes(
             user=self.request.user,
             from_date=self.request.GET.get("from_date"),
             to_date=self.request.GET.get("to_date"),
