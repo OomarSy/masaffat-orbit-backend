@@ -59,7 +59,7 @@ class OvertimeCreateAPI_V1(APIView):
         )
 
 
-class OvertimeListAPI_v1(ListAPIView):
+class OvertimeListAPI_V1(ListAPIView):
     serializer_class = EmployeeOvertimeSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = SmallResultsPagination
@@ -82,7 +82,7 @@ class OvertimeListAPI_v1(ListAPIView):
         except ValueError as e:
             return api_response(
                 errorno=1,
-                message=f"خطأ في البيانات المدخلة: {str(e)}",
+                message="خطأ في البيانات المدخلة",
                 data={}
             )
         except PermissionError as e:
