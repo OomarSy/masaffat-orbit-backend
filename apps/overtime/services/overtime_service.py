@@ -81,12 +81,47 @@ class EmployeeOvertimeService:
                 datetime.combine(entry['end_date'], entry['end_time'])
             )
 
-            delta = end_dt - start_dt
-            hours = Decimal(round(delta.total_seconds() / 3600, 2))
+            current_start = start_dt
+
+            while current_start.date() < end_dt.date():
+                next_midnight = make_aware(
+                    datetime.combine(
+                        current_start.date() + timedelta(days=1),
+                        datetime.min.time()
+                    )
+                )
+
+                delta = next_midnight - current_start
+                hours = Decimal(delta.total_seconds() / 3600).quantize(Decimal("0.01"))
+
+                overtime = EmployeeOvertime.objects.create(
+                    user=user,
+                    date=current_start.date(),
+                    start_datetime=current_start,
+                    end_datetime=next_midnight,
+                    hours=hours,
+                    note=entry.get("note", "")
+                )
+
+                created.append({
+                    "id": overtime.id,
+                    "date": overtime.date.isoformat(),
+                    "start_datetime": overtime.start_datetime.isoformat(),
+                    "end_datetime": overtime.end_datetime.isoformat(),
+                    "hours": float(hours),
+                    "note": overtime.note
+                })
+
+                current_start = next_midnight
+
+            # آخر جزء (نفس اليوم)
+            delta = end_dt - current_start
+            hours = Decimal(delta.total_seconds() / 3600).quantize(Decimal("0.01"))
 
             overtime = EmployeeOvertime.objects.create(
                 user=user,
-                start_datetime=start_dt,
+                date=current_start.date(),
+                start_datetime=current_start,
                 end_datetime=end_dt,
                 hours=hours,
                 note=entry.get("note", "")
@@ -94,6 +129,7 @@ class EmployeeOvertimeService:
 
             created.append({
                 "id": overtime.id,
+                "date": overtime.date.isoformat(),
                 "start_datetime": overtime.start_datetime.isoformat(),
                 "end_datetime": overtime.end_datetime.isoformat(),
                 "hours": float(hours),
@@ -101,6 +137,7 @@ class EmployeeOvertimeService:
             })
 
         return created
+
 
 class ListEmployeeOvertimeService:
 

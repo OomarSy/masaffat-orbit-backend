@@ -65,7 +65,7 @@ class EmployeeAttendanceService:
                 "message": "لقد تم تسجيل الدوام مسبقاً اليوم."
             }
 
-        EmployeeAttendanceService.objects.create(user=user)
+        EmployeeAttendance.objects.create(user=user)
         return {
             "status": "success",
             "message": "تم تسجيل الدوام بنجاح."

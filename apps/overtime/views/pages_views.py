@@ -18,6 +18,7 @@ class ListEmployeeOvertime(BaseListView):
     view_name = "EmployeeOvertime"
     add_url_name = 'overtime:employeeovertime_create'
     segment = "employeeovertime"
+    export_fields = ('id', 'user', 'day_name_ar', 'start_datetime', 'end_datetime', 'hours', 'note')
 
 
 class DetailsEmployeeOvertime(BaseCRUDView, DetailView):
