@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.timezone import localtime
 
+from datetime import datetime
 from decimal import Decimal
 
 from apps.core.mixins import SoftDeleteUniqueMixin
@@ -33,12 +34,8 @@ class EmployeeOvertime(SoftDeleteUniqueMixin, BaseModel):
         """
         اسم اليوم بالإنجليزية
         """
-        dt = self.start_datetime or self.date
-        if dt:
-            # إذا dt هو date فقط بدون وقت
-            if isinstance(dt, datetime.date) and not isinstance(dt, datetime.datetime):
-                from datetime import datetime
-                dt = datetime.combine(dt, datetime.min.time())
+        if self.date:
+            dt = datetime.combine(self.date, datetime.min.time())
             return dt.strftime("%A")
         return None
 

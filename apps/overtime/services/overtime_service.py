@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 
 from decimal import Decimal
 
+from config import settings
+
 from ..models import EmployeeOvertime
 from apps.attendance.utils import ensure_aware
 
@@ -63,6 +65,17 @@ class EmployeeOvertimeService:
 
             if conflict:
                 continue
+
+            weekday = start_dt.weekday()
+            if weekday in getattr(settings, "WORK_DAYS", [0, 1, 2, 3]):
+                if (settings.WORK_START <= start_dt.time() < settings.WORK_END) or \
+                (settings.WORK_START < end_dt.time() <= settings.WORK_END) or \
+                (start_dt.time() <= settings.WORK_START and end_dt.time() >= settings.WORK_END):
+                    errors.append({
+                        "index": idx,
+                        "message": f"لا يمكن تسجيل دوام إضافي خلال ساعات العمل الرسمية ({settings.WORK_START.strftime('%H:%M')} - {settings.WORK_END.strftime('%H:%M')})."
+                    })
+                    continue
 
             validated_ranges.append((idx, start_dt, end_dt))
 

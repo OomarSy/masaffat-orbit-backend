@@ -1,5 +1,7 @@
 from datetime import timedelta
 import os
+from datetime import time
+
 from pathlib import Path
 from dotenv import load_dotenv
 from str2bool import str2bool
@@ -343,4 +345,9 @@ OTP_EXPIRATION = int(os.getenv('OTP_EXPIRATION', 20))
 COMPANY_LATITUDE = 33.513807
 COMPANY_LONGITUDE = 36.276527
 COMPANY_RADIUS_METERS = 150
-WEEKEND_DAYS = [0]  # Friday=4, Saturday=5 (Django: Monday=0)
+
+WORK_START = time(9, 0)  # 9:00 AM
+WORK_END = time(17, 0)  # 5:00 PM
+
+WORK_DAYS = [0, 1, 2, 3, 6] # Monday=0, Tuesday=1, Wednesday=2, Thursday=3 (Django: Monday=0)
+WEEKEND_DAYS = [4, 5]  # Friday=4, Saturday=5 (Django: Monday=0)
