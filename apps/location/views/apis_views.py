@@ -122,13 +122,14 @@ class EmployeeLocationHistoryAPI_V1(APIView):
         from_date = parse_query_datetime(request.GET.get("start_date"))
         to_date = parse_query_datetime(request.GET.get("end_date"))
 
-        qs = EmployLocationHistory.objects.all()
+        qs = EmployLocationHistory.objects.select_related("user").all()
         if user_id:
             qs = qs.filter(user_id=user_id)
         if from_date:
             qs = qs.filter(recorded_at__gte=from_date)
         if to_date:
             qs = qs.filter(recorded_at__lte=to_date)
+        qs = qs.order_by("recorded_at")
 
         data = [
             {
